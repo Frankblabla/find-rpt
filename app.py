@@ -148,14 +148,21 @@ def latest_case(case_id):
 
 @app.get("/case/<case_id>/<int:number>")
 def case_html(case_id, number):
-    from find_rpt.cases import version
+    from find_rpt.cases import read_case, version
+    _, state = read_case(case_id)
+    if number in state.get("retired_versions", []):
+        return redirect(f"/case/{case_id}")
     path, _, _ = version(case_id, number)
     return send_file(path / "brief.html", mimetype="text/html")
 
 
 @app.get("/case/<case_id>/<int:number>/data.json")
 def case_data(case_id, number):
-    from find_rpt.cases import version
+    from find_rpt.cases import read_case, version
+    _, state = read_case(case_id)
+    if number in state.get("retired_versions", []):
+        return jsonify(error="This historical version has been retired.",
+                       latest=f"/case/{case_id}"), 410
     _, result, _ = version(case_id, number)
     return jsonify(result)
 

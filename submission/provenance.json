@@ -1,5 +1,5 @@
 {
-  "scope": "Selected local submission copies. Product examples and genuine English development excerpts are distinct. No source PDF, hidden reasoning or Chinese planning conversation is included. Original private evidence remains unchanged.",
+  "scope": "Selected submission examples and genuine English development excerpts. Source PDFs, hidden reasoning and Chinese planning are excluded. Required original evidence is preserved in the private evidence archive; the current Swatch display is explicitly labelled as a presentation-only refresh.",
   "files": [
     {
       "file": "examples/hexagon-brief.md",
@@ -26,10 +26,11 @@
       "transformation": "None; exact copy of a previously saved, selected artifact."
     },
     {
-      "file": "examples/swatch-v3.html",
-      "source": "local/cases/68a4ad2f568a4750b3ea3f3e0a9e93c0/versions/0003/brief.html",
-      "sha256": "8f2be18764b7d6c954d7b606f1b7546e81992cb094b1080ae31628733d3fa14b",
-      "transformation": "None; exact copy of a previously saved, selected artifact."
+      "file": "examples/swatch-brief.html",
+      "source": "local/cases/68a4ad2f568a4750b3ea3f3e0a9e93c0/versions/0004/brief.html",
+      "sha256": "e0af7a7fcdb3ed943923b8a6b22aae0ca044c9304e214ae0b3e00ed416fdb634",
+      "transformation": "Current presentation-only refresh with whitespace-only HTML lines normalized for the source repository. Research evidence and brief values match original version 3; no new model invocation or semantic review.",
+      "source_sha256": "9e1a9cae3386b1627153739df86f11132449b7621dadf7e4e1808d1ae2560377"
     },
     {
       "file": "development/transcript.md",

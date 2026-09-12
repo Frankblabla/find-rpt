@@ -8,7 +8,7 @@ uv run pytest -q
 node --test tests/*.test.mjs
 ```
 
-The suite has **132 Python cases and 10 JavaScript cases**. It uses temporary
+The suite has **137 Python cases and 11 JavaScript cases**. It uses temporary
 synthetic PDFs and fake model processes. It does not require the private corpus,
 Claude authentication, a running server, network access or paid model calls.
 Python verifies behavior through direct functions, the CLI boundary and Flask's
@@ -19,14 +19,14 @@ needed. PyMuPDF currently emits five upstream deprecation warnings.
 
 | File | What it checks |
 | --- | --- |
-| `test_cases.py` | Native case lifecycle: partial/full publication, Q&A, version preservation, stale updates, recovery, drafts and tampering |
+| `test_cases.py` | Native case lifecycle: partial/full publication, Q&A, version preservation, stale updates, recovery, automatic/no-draft decisions, retired-history follow-up, drafts and tampering |
 | `test_evidence.py` | Extraction/selection contracts, retained facts, source support, composition and baseline process failures |
 | `test_comparison_picture.py` | Fiscal periods, comparison grouping, target labels, reported bps, qualitative revisions and arithmetic boundaries |
 | `test_selection.py` | Ticker identity, manual confirmation, provenance, selected-source access and CLI selection |
 | `test_baseline.py` | Earlier web/batch interface, lookup, source rendering, missing values and model-process configuration |
 | `test_full_flow.py` | Synthetic API workflows, draft recipients, follow-up lineage and original-PDF links |
 | `test_heldout.py` | Evaluation-runner safeguards using synthetic files: frozen selection, no repeats and failure recording |
-| `app.test.mjs` | Browser state: stale requests, selection confirmation and identity blocking |
+| `app.test.mjs` | Browser state: stale requests, selection confirmation, identity blocking and explicit no-draft reasons |
 | `estimates.test.mjs` | Estimate grouping and revision display, including zero, rounded levels and basis points |
 
 `conftest.py` owns the temporary corpus fixture. `support.py` contains the shared
@@ -44,7 +44,7 @@ uv run pytest -k 'basis_points or overflow or partial' -q
 ## Real model evaluations are separate
 
 Scripts in `evals/` prepare or run explicit evaluations; they are not part of
-ordinary test execution. Actual private runs live in ignored `local/` folders.
+ordinary test execution. Selected original run evidence is consolidated in ignored `local/evidence/`.
 Do not rerun a paid batch as a submission check. The committed-format
 [submission summary](../submission/evaluation.md) records observed outcomes,
 costs and limitations. Passing synthetic tests proves the specified application

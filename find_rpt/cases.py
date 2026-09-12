@@ -221,6 +221,7 @@ def context(case_id):
         previous = (
             version(case_id, meta["parent_version"])[1]
             if meta["parent_version"]
+            and meta["parent_version"] not in state.get("retired_versions", [])
             else None
         )
         out.update(
@@ -244,7 +245,7 @@ def context(case_id):
                 ]
             },
             email_draft=result["brief"]["email_draft"],
-            last_change=describe_change(previous, result),
+            last_change=meta.get("changes", describe_change(previous, result)),
             artifact_status=result.get("artifact_status", "full"),
         )
     recent = sorted((folder / "answers").glob("*.json"))[-5:]

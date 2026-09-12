@@ -97,8 +97,12 @@ its display section or required flag. Do not reference identity, follow-up-only,
 not_reported or unrelated facts as causes. A full numerical
 bridge, detailed split between causes, prior consensus or dividend payout mechanics
 is NOT required. A report-wide stated cause can cover related estimate updates.
-Only use not_stated when a separate material change has no stated reason after
-reading the whole report. Do not equate missing quantification with missing cause.
+Use not_stated when a material change has no clear, applicable reason after
+reading the whole report. This includes absent explanations and vague or
+conflicting explanations that do not establish why that change was made.
+Unrelated background commentary is not a stated cause. Do not equate missing
+quantification with missing cause. The host automatically creates a draft for
+these rows during full publication; no extra user request is required.
 Use not_a_revision for unchanged/comparison-only rows; then reason_fact_ids is [].
 Every changed row must have a reason assessment. No model-authored clarification
 questions: the host asks only why the specifically unexplained metric-year changed.

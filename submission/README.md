@@ -10,15 +10,16 @@ so a repository checkout does not depend on an ignored local evidence index.
 | --- | --- |
 | Working implementation | `find_rpt/`, `app.py`, `.claude/skills/find-rpt/`, `templates/`, `static/` in the repository |
 | Short README and run instructions | Root README, configuration example and [test guide](../tests/README.md) |
-| A few actual examples | [Swatch HTML](examples/swatch-v3.html), [native conversation](examples/native-conversation.md), and the baseline examples below |
+| A few actual examples | [Swatch HTML](examples/swatch-brief.html), [native conversation](examples/native-conversation.md), and the baseline examples below |
 | Genuine AI development logs | [Readable development excerpt](development/transcript.md), [original selected visible events](development/visible-events.jsonl), and [later recovery development events](development/recovery-visible-events.jsonl) |
 
 ## Examples and their scope
 
-- **Swatch version 3** is a saved output from the latest thirteen-broker evaluation.
-  Its same-agent review corrected an unsupported unchanged-rating inference. The
+- **Swatch brief** retains the research output from the thirteen-broker evaluation,
+  refreshed with the current email-status display and latest-only navigation.
+  The original same-agent review corrected an unsupported unchanged-rating inference. The
   selected source spot-check found no unsupported final claim within its limited
-  scope. Share-class/exchange identity remains ambiguous.
+  scope. This presentation refresh adds no new semantic review. Share-class/exchange identity remains ambiguous.
 - **Native conversation** contains six actual product-use turns demonstrating
   source Q&A, presentation changes, content amendment and resume. It preserves
   two reviewer corrections. It is a development example, not a blind holdout or
@@ -31,13 +32,13 @@ so a repository checkout does not depend on an ignored local evidence index.
 
 Source links open the local viewer on port 8765 and require the authorized corpus
 and manifest described in the root README. The standalone HTML and Markdown are
-readable without the viewer; historical version-navigation links require the
-original case archive. Original PDFs are not included. The bundled [corpus manifest](corpus-manifest.json)
+readable without the viewer; retired local HTML links redirect to current results; exact historical versions are
+kept only in the private evidence archive. Original PDFs are not included. The bundled [corpus manifest](corpus-manifest.json)
 contains filenames, hashes and historical split labels only. Its isolation wording
 is historical; the current application allows ordinary access to all 101 entries.
 
 [Evaluation summary](evaluation.md) records test counts, actual broker attempts,
-client costs and known limitations. Full private audits remain in `local/` and are
+client costs and known limitations. Necessary private audits are consolidated in `local/evidence/` and are
 not necessary to read the included summary or examples.
 
 ## Log provenance and sharing boundary
@@ -50,10 +51,10 @@ credentials are excluded.
 
 [Copy provenance](provenance.json) records each included artifact's original
 local path and SHA-256. The adjacent development provenance files retain original
-line numbers and source hashes. These selected artifacts are exact copies; old
+line numbers and source hashes. Development excerpts are exact copies. The current Swatch HTML has only whitespace-only lines normalized, as recorded in provenance; old
 claims, failed attempts and review corrections were not rewritten to look better.
 Absolute paths in genuine logs describe the original development workspace and
 are not fresh-checkout run instructions.
 
 This repository publishes only the selected submission package. The original
-private development archive remains local. Email drafts have never been sent.
+necessary evidence archive remains local. Email drafts have never been sent.

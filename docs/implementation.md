@@ -1,9 +1,8 @@
 # Walk through the current code
 
 Read the [README](../README.md) first. This is the current code walkthrough;
-[deliverables](deliverables.md) maps requirements and [iterations](../submission/evaluation.md)
-keeps historical decisions and results. You do not need the history to understand
-this application.
+[deliverables](deliverables.md) maps requirements. Recorded outcomes and limitations
+belong in the [evaluation summary](../submission/evaluation.md).
 
 ## The whole path
 
@@ -82,40 +81,16 @@ force a source into a familiar prior/new pattern when the report does not suppor
 Prompt changes after a failure are development improvements, not evidence of
 generalization. Evaluate on untouched documents only under a new bounded test plan.
 
-The six-material-fact cap caused an avoidable amendment failure: appending sourced
-clauses failed schema validation before composition could check whether they fit.
-That cap has now been removed, rather than raised to another arbitrary number.
-Evidence validity and output length are separate concerns. Exact quotations,
-required-fact retention, arithmetic and version checks still apply. Other list
-caps and the 45-word clause cap remain; this is a targeted simplification, not a
-claim that every editorial restriction has been removed.
+There is no fixed count cap on material facts. Evidence validity and optional
+prose length are separate concerns; required facts survive composition. The
+45-word clause cap and some bounded lists remain. Target labels are not universal:
+TP/Target-only labels and valuation midpoints still have known gaps.
 
-The subsequent [ten-report evaluation](../submission/evaluation.md)
-exposed target-label and rounded basis-point revision defects. The current tools
-accept supported target-price synonyms and horizons such as `12-mth`/`12-month`.
-`reported_revision_bps` now preserves a printed basis-point revision separately
-from a relative percentage or a calculated difference between rounded levels.
-Equal old/new levels can therefore remain a real reported revision. Names still
-need original evidence; executive role descriptions can be supported paraphrases
-rather than exact substring copies. Semantic accuracy still needs source review.
-
-[Offline preserved-input regressions](../submission/evaluation.md)
-reproduce the old Ahold and Jahez failures without another model call. Both Ahold
-candidates now publish at 248 words, including a sourced role paraphrase. Danone's
-six printed basis-point changes survive a disclosed mechanical mapping into the
-new field. These are tool regressions, not fresh model successes; historical
-failed inputs, classifications and HTML remain unchanged.
-
-Keep Pydantic at JSON input boundaries, ordinary functions for behavior, and
-Flask/PyMuPDF for the local interface and PDF access. These are the three direct
-runtime dependencies. Removing schema classes would not fix the misplaced rule
-and would require replacement validation code. The useful reduction here is in
-coupling between evidence and presentation, with no new abstraction or dependency.
-
-Earlier evidence remains readable. The new optional basis-point fields default to
-null/empty support; existing serialized artifacts are not rewritten. Existing case schema snapshots retain the creation-time contract, while
-current tools validate amendments against the relaxed contract. Historical runs,
-failed attempts and HTML versions are preserved; none is relabelled as a success.
+Reported basis-point revisions remain separate from rounded old/new levels.
+Optional fields default away for older inputs. Pydantic validates JSON boundaries;
+ordinary functions implement behavior. Flask, PyMuPDF and Pydantic are the three
+direct runtime dependencies. These choices keep maintenance local without claiming
+that schema or prompt rules cannot overfit.
 
 ## Data objects: containment, references and fields
 
@@ -231,24 +206,9 @@ The remaining durable containers are ordinary dictionaries, not extra classes:
 
 ## Reliability: rejection, cost limits and useful partial output
 
-The ten-report test used an evaluator-selected **USD2.50 initial-session cap**,
-600-second timeout and 24-turn limit. These are in its saved invocation commands,
-not the ordinary interactive launch in the README. DiaSorin and Endur stopped
-specifically with `error_max_budget_usd`, at USD2.5286 and USD2.5620, after 16 and
-12 turns and after HTML had already been saved. Neither hit the time/turn limit.
-This does not show that the user's account quota was exhausted.
-
-Both agents generated large evidence payloads, including 201 and 206 original
-quote lines and 21 and 41 estimate rows. Tool use and review also consumed model
-usage. The observed accounting establishes where the cap stopped the workflow;
-it does not isolate the causal cost of each schema field or show that every
-report needs a larger budget. A uniform cap was chosen to bound evaluation cost,
-but it failed to reserve a reliable final handoff for these two cases.
-
-Ahold was different: the old workflow stopped below the cap at USD2.4048 after
-rejecting a target-price label twice and saved no HTML. A later offline replay
-also exposed exact-role wording and length gates. The current implementation
-separates evidence validity, available output and client completion:
+Client completion, artifact availability and research correctness are separate.
+A model can stop after saving useful HTML. Recover existing output before paying
+for another run; inspect unresolved work and review scope.
 
 | Condition | Implemented behavior |
 | --- | --- |
@@ -269,21 +229,9 @@ row is silently dropped to manufacture a full brief, and no rejected candidate i
 automatically promoted after a budget stop. Native client status, artifact status,
 review scope and research correctness remain separate evaluation dimensions.
 
-The [thirteen-broker development evaluation](../submission/evaluation.md)
-records the later fixed product. Its requested client cap is USD3 per initial
-session, not an interactive product default. The previously rejected Ahold/Jahez
-inputs now pass offline, but target vocabulary is not universal: SJF Bank's
-valuation-range midpoint and Bouvet's TP/Target label still failed as structured
-non-fiscal rows. The generating agent retained those values in prose and disclosed
-the omissions. Keep this limitation separate from source validity; do not infer
-that a rejected formatting label makes the underlying value unsupported.
-
-The source review also found interpretation and escalation issues beyond schema
-checks, including Soitec's ambiguous exceptional-items amount and IAG's possibly
-unnecessary outer-year clarification questions. The same-agent notes did not
-resolve every issue, and some did not record the available artifact hashes.
-Use the evaluation's per-case findings to assess those outputs; a full artifact
-or an existing review note is not an accuracy certificate.
+See the [evaluation summary](../submission/evaluation.md) for actual failures,
+budget stops and source-review findings. Current tool checks do not establish
+semantic accuracy.
 
 ## Six stops through one conversation
 
@@ -386,14 +334,9 @@ calls and the old batch/web entry can still produce an unreviewed result. Review
 notes are ordinary working files and are not immutable, tool-attested certificates.
 No "hallucination-free" status or numerical confidence score is claimed.
 
-The review adds model work in the current conversation, but no second model
-process or automatic retry loop. The original development walkthrough on CPG is
-recorded in `local/iteration-07-design-review/`; it used no fresh model session.
-The later ten-report evaluation exercised the instruction: eight of nine latest
-HTML artifacts had review notes, but Endur's was incomplete and source spot-checks
-still found missed qualifiers and Danone's wrong revision classification. There
-is no controlled before/after measurement of accuracy improvement. The 122 Python
-tests validate tool behavior, not semantic review effectiveness.
+The review adds work in the current conversation, not a second model process.
+Its effectiveness is not established by offline tests; scope and any remaining
+uncertainties must accompany the result.
 
 ### 5. Follow an artifact and a citation
 
@@ -426,29 +369,19 @@ HTML and source routes while forbidding subprocess calls. Other tests reject bad
 quotes, stale versions, changed saved evidence and mismatched identity, and check
 a sourced, escaped draft. Fixtures are synthetic and consume no model usage.
 
-The real native session, exact prompts, raw outputs, tool audit and review are
-retained privately under `local/iteration-07-development/`. Each user turn exits
-Claude and the next resumes the same session, exercising persistence. See the
-iteration record for actual outcomes and corrections, rather than treating the
-intended workflow as a passed test.
+The [native conversation](../submission/examples/native-conversation.md) is a
+real saved exercise with explicit reviewer corrections. The separate
+[evaluation summary](../submission/evaluation.md) records actual outcomes and costs.
 
-The separate [ten-report batch](../submission/evaluation.md) preserved
-all failures under a fixed product and prompt: seven initial workflows completed,
-two saved HTML before a cost-budget interruption, and one failed publication.
-Both planned follow-ups succeeded. Deterministic checks and limited development
-assistant source spot-checks are recorded separately; neither establishes full
-corpus accuracy. No product changes or extra model calls followed those findings.
-
-For an artifact walkthrough, read `case.json` -> `request.json` ->
-`versions/0001/evidence.json` -> `result.json` -> `brief.html`, then compare later
-versions and `answers/`. Pick a number and follow its original quote to the final
-row. Pick a follow-up answer and check its complete supporting lines.
+For an artifact walkthrough, read case.json, request.json, and the version named
+by latest_version: evidence.json, result.json, brief.html. Pick a number and trace
+it back to an original quote. Read a saved answer separately from an HTML update.
 
 ## What can wait
 
 The old [harness.py](../find_rpt/harness.py), `.agents/skills/find-rpt/SKILL.md`,
 web form and batch CLI preserve the one-shot baseline. They are not the native
-skill's inner agent. `evals/`, `revalidate.py`, historical notes and snapshots are
+skill's inner agent. `evals/` and `revalidate.py` are
 experiment/provenance tools, not onboarding steps. Original evaluations remain
 frozen and the remaining reserved PDFs stay unread.
 
@@ -457,3 +390,40 @@ manual lookup, and native-agent adherence to the skill. Python validates structu
 and evidence locations; it does not prove research accuracy or prevent an agent
 with filesystem permissions from disobeying instructions. No multi-agent verifier,
 OCR service, vector database or mail integration is needed for this scope.
+
+## Email decisions and current output navigation
+
+Full publication automatically creates a clarification draft when a changed
+estimate has reason=not_stated. The extraction instructions use that assessment
+for absent or unclear applicable causes. A clear qualitative explanation is
+sufficient; a complete numerical bridge is not required. The model still owns
+the semantic assessment; the tool validates references and enforces the trigger.
+
+The HTML always shows Email draft status, including why no automatic draft is
+needed: no identified estimate revisions, or stated causes for the revisions.
+A partial brief says the assessment is unfinished. A user-requested draft is
+explicitly labelled as additional and can coexist with no automatic need.
+For example, CPG has no identified forecast revision but its saved conversation
+requested a separate unit-clarification draft. Those statements are compatible.
+The template also exposes an inconsistent missing required draft rather than
+silently treating it as a completed no-draft decision.
+
+Native display is in templates/brief.html; the maintained web form has its own
+display in static/app.js. Both use the existing brief fields, with no new status
+object, database or email dependency.
+
+Normal updates save a new version so failures do not destroy valid output.
+The local cleanup retains one current HTML per case. Explicitly retired version
+numbers are recorded in case.json; their HTML URLs redirect to the latest page,
+while old JSON URLs return 410 rather than mislabel current data as historical.
+Context uses the stored change summary when a retired parent is unavailable.
+Unmarked missing files still fail normally. Follow-up and new publication remain
+available after cleanup. The visible footer links to the latest output and
+structured data, not a historical page browser.
+
+Selected original evidence is retained privately in
+local/evidence/submission-evidence.zip with a per-file hash manifest. The archive
+supports submission claims; it is not another executable product tree. The
+cleanup refreshed current HTML through the renderer without changing evidence,
+brief values or comparisons. That presentation refresh is not a new model run
+or semantic review. Public example excerpts remain unchanged.

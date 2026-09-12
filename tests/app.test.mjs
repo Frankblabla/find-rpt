@@ -93,3 +93,23 @@ test('manual notice survives source confirmation and mismatch hides all brief an
   assert.match(u.element('result').innerHTML,/Wrong subject/);
   assert.doesNotMatch(u.element('result').innerHTML,/Synthetic brief content|Synthetic draft content|What changed|Ask a follow-up/);
 });
+
+test('email status explains no revisions, a stated cause, or a missing required draft', async () => {
+  const u=ui(); await tick();
+  const fact={text:'Synthetic statement',sources:['p1l1'],kind:'broker'};
+  const fixture={report:{id:'a',broker:'Test'},request:{ticker:'ABC LN',lookup_date:'20260511'},brief:{
+    title:'Example',report_date:'2026-05-11',subject_match:'confirmed',identity:fact,takeaway:fact,
+    changes:[],estimates:[],drivers:[],context:fact,estimate_picture:fact,material:[],answer:[],limitations:[],
+    email_draft:null,
+  },comparisons:[]};
+  for (const [revisions,rationale,message] of [
+    [false,'not_applicable','no estimate revisions were identified'],
+    [true,'clear','the identified revisions have a stated rationale'],
+    [true,'unclear','A required draft is missing'],
+  ]) {
+    Object.assign(fixture.brief,{revisions_present:revisions,rationale});
+    u.context.fixture=fixture; vm.runInContext('render(fixture)',u.context);
+    assert.ok(u.element('result').innerHTML.includes(message));
+    assert.equal(u.element('result').innerHTML.includes('No email draft was generated.'), !revisions || rationale==='clear');
+  }
+});

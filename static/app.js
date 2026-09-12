@@ -132,6 +132,19 @@ function render(result) {
       "Also worth reading",
       b.material.map((c) => claim(c)).join(""),
     );
+  const automaticEmailStatus = !b.revisions_present
+    ? "No automatic email draft is needed: no estimate revisions were identified in this report."
+    : b.rationale === "clear"
+      ? "No automatic email draft is needed: the identified revisions have a stated rationale."
+      : "An automatic clarification draft is required: at least one revision lacks a clear, applicable rationale.";
+  let emailStatus = `<p>${automaticEmailStatus}</p>`;
+  if (!b.email_draft) {
+    const missingDraft = b.revisions_present && b.rationale !== "clear";
+    emailStatus += `<p>${missingDraft
+      ? "A required draft is missing. Review the saved result before treating the brief as complete."
+      : "No email draft was generated."}</p>`;
+  }
+  content += section("Email draft status", emailStatus);
   if (b.email_draft) {
     const d = b.email_draft;
     content += section(

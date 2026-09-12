@@ -135,6 +135,61 @@ def test_identity_gate_applies_before_publication(corpus):
     assert cases.context(ctx["id"])["latest_version"] == 0
 
 
+def test_retired_history_keeps_latest_context_and_followups_usable(published):
+    import shutil
+
+    cases.rerender(published, 1, detail="compact")
+    folder, state = cases.read_case(published)
+    expected_change = cases.version(published)[2]["changes"]
+    state["retired_versions"] = [1]
+    cases.save(folder / "case.json", state)
+    shutil.rmtree(folder / "versions/0001")
+
+    assert cases.context(published)["last_change"] == expected_change
+    assert cases.deliver(published)["version"] == 2
+    client = web.app.test_client()
+    old = client.get(f"/case/{published}/1")
+    assert old.status_code == 302 and old.location == f"/case/{published}"
+    assert client.get(old.location, follow_redirects=True).status_code == 200
+    assert client.get(f"/case/{published}/1/data.json").status_code == 410
+    assert client.get(f"/case/{published}/999").status_code == 404
+    answer = cases.save_answer(published, answer_file(published, 2))
+    cases.revise(published, answer["answer_id"], 2, draft=True)
+    path, result, _ = cases.version(published)
+    assert result["brief"]["email_draft"] is not None
+    assert "Previous version" not in (path / "brief.html").read_text()
+
+
+@pytest.mark.parametrize("scenario", ["no_revision", "clear", "unexplained", "requested"])
+def test_publication_explains_automatic_email_decision(published, scenario):
+    value = extracted_v3().model_dump()
+    if scenario in {"no_revision", "requested"}:
+        for row in value["estimates"]:
+            row.update(old=row["new"], reported_revision_pct=0,
+                       reason="not_a_revision", reason_fact_ids=[])
+    elif scenario == "unexplained":
+        value["estimates"][0].update(reason="not_stated", reason_fact_ids=[])
+    candidate = cases.case_path(published) / "work/email-decision.json"
+    cases.save(candidate, value)
+    cases.publish(published, candidate, 1)
+    if scenario == "requested":
+        answer = cases.save_answer(published, answer_file(published, 2))
+        cases.revise(published, answer["answer_id"], 2, draft=True)
+    path, result, _ = cases.version(published)
+    html = (path / "brief.html").read_text()
+    assert 'id="email-draft"' in html
+    assert bool(result["brief"]["email_draft"]) == (scenario in {"unexplained", "requested"})
+    if scenario in {"no_revision", "requested"}:
+        assert "no estimate revisions were identified" in html
+    if scenario == "clear":
+        assert "the identified revisions have a stated rationale" in html
+    if scenario == "unexplained":
+        assert "Generated automatically for unexplained revisions" in html
+    if scenario == "requested":
+        assert "Additional draft requested by the user" in html
+        assert "No email draft was generated" not in html
+
+
 def checkpoint_file(case_id):
     value = dict(
         title="Synthetic first read",
@@ -164,6 +219,7 @@ def test_partial_survives_failed_publication_and_model_free_delivery(
     original_path, partial, _ = cases.version(cid)
     hashes = {p.name: cases.digest(p) for p in original_path.iterdir()}
     assert partial["artifact_status"] == "partial"
+    assert "Not assessed yet." in (original_path / "brief.html").read_text()
     assert "Partial brief." in (original_path / "brief.html").read_text()
     assert (
         "Full estimate and consensus extraction"

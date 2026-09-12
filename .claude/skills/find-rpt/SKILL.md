@@ -121,6 +121,10 @@ in chat. Existing schema/quote validation is necessary but does not check meanin
   that inference has not become a broker assertion, and that conflicts remain
   visible. A source that cannot settle a point leaves it unresolved.
 - Check attribution and any draft's factual premises, contact details and sender.
+  Verify the saved email status: unexplained revisions trigger a draft automatically;
+  no revisions or clear applicable causes do not. Distinguish an additional
+  user-requested draft from that automatic decision. Report the saved status in
+  chat, including why no draft was generated, rather than assuming a blank result.
 - For a revision, inspect `changes`/`last_change`; disclose removed prose and
   distinguish all saved rows from the filtered HTML view.
 

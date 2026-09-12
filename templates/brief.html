@@ -240,10 +240,32 @@
      role="img"
      aria-label="{{ chart.row.metric }} {{ chart.row.fiscal_year }} comparison"><line x1="{{ chart.zero }}" x2="{{ chart.zero }}" y1="5" y2="{{ chart.height }}" stroke="#c2d2ca" />{% for p in chart.points %}<text x="0" y="{{ p.y+12 }}">{{ p.label }}</text><rect x="{{ p.x }}" y="{{ p.y }}" width="{{ p.width }}" height="16" rx="2" /><text x="375" y="{{ p.y+12 }}">{{ p.value }}</text>{% endfor %}</svg></figure>{% endfor %}</div>{% endif %}</section>
       {% if b.material %}<section><h2>Also worth reading</h2>{% for c in b.material %}{{ claim(c) }}{% endfor %}</section>{% endif %}
-      {% if b.email_draft %}{% set d = b.email_draft %}<section><h2>Clarification draft</h2><p class="notice"><strong>Draft only — never sent.</strong> {{ b.escalation_reason }}</p><p>To: {{ d.analyst }} &lt;{{ d.to }}&gt;{{ cite(d.sources) }}<br>Subject: {{ d.subject }}</p><pre>{{ d.body }}</pre></section>{% endif %}
       {% if b.limitations %}<details{% if result.view.detail == 'full' %} open{% endif %}><summary>Limitations</summary><ul>{% for text in b.limitations %}<li>{{ text }}</li>{% endfor %}</ul></details>{% endif %}
       {% endif %}
-      <footer><p>Continue the discussion in the same Claude Code session. Ask for an explanation, a source check, or a new version of this HTML.</p><p class="meta">{{ meta.reason }} · {{ meta.created_at }} · {{ result.main_word_count }} main-prose words<br><a href="{{ base }}/case/{{ case_id }}">Latest version</a>{% if meta.parent_version %} · <a href="{{ base }}/case/{{ case_id }}/{{ meta.parent_version }}">Previous version</a>{% endif %} · <a href="{{ base }}/case/{{ case_id }}/{{ meta.version }}/data.json">Structured data</a><br>Original PDF SHA256: {{ meta.research_source_sha256 }}<br>Original-source highlights require the local Find Rpt viewer. Exact references establish locations, not semantic correctness.</p></footer>
+      <section id="email-draft"><h2>Email draft status</h2>
+        {% if result.get('artifact_status') == 'partial' %}
+          <p>Not assessed yet. Revision and rationale checks are unfinished; no email draft has been generated.</p>
+        {% else %}
+          {% if not b.revisions_present %}
+            <p>No automatic email draft is needed: no estimate revisions were identified in this report.</p>
+          {% elif b.rationale == 'clear' %}
+            <p>No automatic email draft is needed: the identified revisions have a stated rationale.</p>
+          {% else %}
+            <p>An automatic clarification draft is required: at least one revision lacks a clear, applicable rationale.</p>
+          {% endif %}
+          {% if b.email_draft %}{% set d = b.email_draft %}
+            <h3>Clarification draft</h3>
+            <p class="notice"><strong>Draft only — never sent.</strong>
+              {% if result.get('draft_origin', {}).get('source') == 'user_request' %}Additional draft requested by the user; separate from the automatic revision check.
+              {% else %}Generated automatically for unexplained revisions.{% endif %}
+            </p>
+            <p>To: {{ d.analyst }} &lt;{{ d.to }}&gt;{{ cite(d.sources) }}<br>Subject: {{ d.subject }}</p><pre>{{ d.body }}</pre>
+          {% elif b.revisions_present and b.rationale != 'clear' %}
+            <p>A required draft is missing. Review the saved result before treating the brief as complete.</p>
+          {% else %}<p>No email draft was generated.</p>{% endif %}
+        {% endif %}
+      </section>
+      <footer><p>Continue the discussion in the same Claude Code session. Ask for an explanation, a source check, or a new version of this HTML.</p><p class="meta">{{ meta.reason }} · {{ meta.created_at }} · {{ result.main_word_count }} main-prose words<br><a href="{{ base }}/case/{{ case_id }}">Latest version</a> · <a href="{{ base }}/case/{{ case_id }}/{{ meta.version }}/data.json">Structured data</a><br>Original PDF SHA256: {{ meta.research_source_sha256 }}<br>Original-source highlights require the local Find Rpt viewer. Exact references establish locations, not semantic correctness.</p></footer>
     </main>
   </body>
 </html>

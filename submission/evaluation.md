@@ -73,3 +73,18 @@ All 23 files frozen for the latest model batch and 1,023 protected original/
 historical files were unchanged at closeout. The submission cleanup reorganizes
 test support and packages selected evidence without changing product behavior.
 Full private audit records remain under `local/iteration-07-gap-13/`.
+
+
+## Final interface and workspace check
+
+After the recorded model evaluations, the interface gained an explicit email
+decision for automatic, unnecessary, user-requested and unfinished cases.
+The extraction guidance clarifies absent or unclear applicable reasons without
+requiring a full quantitative bridge. No model batch was rerun for this change.
+
+The final offline suite passes 137 Python and 11 JavaScript cases, including
+follow-up after old local versions are retired. Current local HTML was refreshed
+without changing research evidence, brief values or comparisons. Original
+submitted excerpts remain unchanged; required private source evidence is
+consolidated separately. These interface checks do not upgrade historical model
+results or establish improved semantic accuracy.

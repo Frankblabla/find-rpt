@@ -38,9 +38,15 @@ prose target without a length-only rejection or retry. Do not launch with `--saf
 skills. Model/effort are selectable through Claude launch options; Opus/high is
 our launch recommendation, not a forced setting in the skill.
 
+Every HTML includes an email decision. Unexplained estimate revisions trigger a
+draft automatically. Otherwise it says why none is needed: no identified revisions
+or stated reasons. A user-requested draft is labelled separately; it can exist even
+when automatic revision clarification is unnecessary. Partial output says the
+decision is not yet assessed.
+
 Q&A saves a short cited answer and leaves the HTML unchanged. Presentation changes
 create a new HTML version from the same validated data. Content changes are
-validated again. Older versions remain readable. Claude consumes model usage for
+validated again. New updates retain recovery versions; explicitly retired local HTML links redirect to the latest result. Claude consumes model usage for
 reasoning and tool calls; Python tools themselves consume no model tokens.
 
 Before handoff, the skill now asks the same agent to reread the saved output and
@@ -89,7 +95,7 @@ All 101 manifest reports are accessible. Date/broker filtering and conservative
 cover matching locate candidates. Unverified ticker identities require original
 PDF review and explicit file confirmation. This is not full-corpus accuracy proof.
 
-Artifacts live in `local/cases/CASE_ID/`: `case.json` and `request.json` record
+The cleaned workspace retains one current HTML per case. Required original audit evidence is kept separately under `local/evidence/`. Artifacts live in `local/cases/CASE_ID/`: `case.json` and `request.json` record
 identity; `answers/` stores Q&A; `versions/0001/` contains `brief.html`, evidence,
 result JSON and hashes. Each changed artifact gets a new version. Standalone HTML
 can be read without the viewer, but source links require the local corpus and
@@ -130,7 +136,7 @@ uv run pytest -q
 node --test tests/*.test.mjs
 ```
 
-Current checks: **132 Python tests and ten JavaScript tests pass**. The six-turn
+Current checks: **137 Python tests and 11 JavaScript tests pass**. These include explicit email decisions and follow-up after historical-output cleanup. The six-turn
 [real native exercise](submission/examples/native-conversation.md)
 produced four HTML versions and five answers, with two explicit review corrections.
 The earlier [ten-report evaluation](submission/evaluation.md) saved
@@ -157,7 +163,7 @@ can make one focused correction after a validation error; a remaining failure
 keeps the last valid artifact. Rejected tool inputs are retained.
 
 The [evaluation summary](submission/evaluation.md) and selected examples are
-included. Full private audits and historical development notes are not published.
+included. The necessary private evidence is consolidated under `local/evidence/` and is not published.
 
 ## Earlier baseline
 
