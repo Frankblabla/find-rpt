@@ -1,0 +1,71 @@
+{
+  "scope": "Selected local submission copies. Product examples and genuine English development excerpts are distinct. No source PDF, hidden reasoning or Chinese planning conversation is included. Original private evidence remains unchanged.",
+  "files": [
+    {
+      "file": "examples/hexagon-brief.md",
+      "source": "local/iteration-05-submission/hexagon-brief.md",
+      "sha256": "8f18330ac663a10f30b4aed1dc4097fdf36980ac76621faf54146b24306a75ee",
+      "transformation": "None; exact copy of a previously saved, selected artifact."
+    },
+    {
+      "file": "examples/grenergy-brief.md",
+      "source": "local/iteration-05-submission/grenergy-brief.md",
+      "sha256": "628ae0f623a62187ec70f1c63124219ed2cad4b7cec79efb647666e76d8eb98d",
+      "transformation": "None; exact copy of a previously saved, selected artifact."
+    },
+    {
+      "file": "examples/grenergy-followup.md",
+      "source": "local/iteration-05-submission/grenergy-followup.md",
+      "sha256": "79e9505863743bc0c4654ce04c3edfc37d378c10ba4c93db08a465c080231b83",
+      "transformation": "None; exact copy of a previously saved, selected artifact."
+    },
+    {
+      "file": "examples/native-conversation.md",
+      "source": "local/iteration-07-development/native-visible-transcript.md",
+      "sha256": "59354633680ad7badd3db5026ab8222f5840c8081ab92df77df3a7e065a97299",
+      "transformation": "None; exact copy of a previously saved, selected artifact."
+    },
+    {
+      "file": "examples/swatch-v3.html",
+      "source": "local/cases/68a4ad2f568a4750b3ea3f3e0a9e93c0/versions/0003/brief.html",
+      "sha256": "8f2be18764b7d6c954d7b606f1b7546e81992cb094b1080ae31628733d3fa14b",
+      "transformation": "None; exact copy of a previously saved, selected artifact."
+    },
+    {
+      "file": "development/transcript.md",
+      "source": "local/iteration-05-submission/development-transcript.md",
+      "sha256": "f78dac352feab3727209e6daf7328603b52ab695931ca7add36a8e7591989932",
+      "transformation": "None; exact copy of a previously saved, selected artifact."
+    },
+    {
+      "file": "development/visible-events.jsonl",
+      "source": "local/iteration-05-submission/selected-visible-events.jsonl",
+      "sha256": "0c611d7d7848411cd0c14ca576eadc99ca8f456f2065f7d4c4ce7552c3a5b51b",
+      "transformation": "None; exact copy of a previously saved, selected artifact."
+    },
+    {
+      "file": "development/original-provenance.json",
+      "source": "local/iteration-05-submission/provenance.json",
+      "sha256": "e2fd62d3d05f8341c2a3f940c34c2075c7b1339b42d1b48456e58c4f4b1dbef4",
+      "transformation": "None; exact copy of a previously saved, selected artifact."
+    },
+    {
+      "file": "development/recovery-visible-events.jsonl",
+      "source": "local/iteration-07-recovery/development-visible-events.jsonl",
+      "sha256": "9e8552867998c34eac8d448edce45c164176954d4ff2cb593f1441238e28c527",
+      "transformation": "None; exact copy of a previously saved, selected artifact."
+    },
+    {
+      "file": "development/recovery-provenance.json",
+      "source": "local/iteration-07-recovery/development-provenance.json",
+      "sha256": "05346de19fca14e8203bcbdf5341a626ba92100730cf3ec968d3244021319d93",
+      "transformation": "None; exact copy of a previously saved, selected artifact."
+    },
+    {
+      "file": "corpus-manifest.json",
+      "source": "local/split.json",
+      "sha256": "4aee2a3112270c503d93d25cd83c669c71461a6b3175cf82a74f60408315427f",
+      "transformation": "None; metadata-only original split. Historical isolation wording is not the current application access policy."
+    }
+  ]
+}

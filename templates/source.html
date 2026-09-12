@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Source · Find Rpt</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body class="source-body">
+    <nav class="source-nav">
+      <strong>Original PDF · page {{ page.number }}/{{ count }}</strong>
+      <a
+        href="/pdf/{{ report.id }}#page={{ page.number }}"
+        target="_blank"
+        rel="noopener"
+        >Open PDF</a
+      >
+      {% if page.number > 1 %}<a
+        href="?page={{ page.number - 1 }}&refs={{ refs }}"
+        >Previous</a
+      >{% endif %} {% if page.number < count %}<a
+        href="?page={{ page.number + 1 }}&refs={{ refs }}"
+        >Next</a
+      >{% endif %} {% for n in cited_pages %}<a
+        href="?page={{ n }}&refs={{ refs }}"
+        >Evidence p{{ n }}</a
+      >{% endfor %}
+    </nav>
+    <div class="source-label">
+      {{ report.file }}<br />Blue outlines mark cited passages on the unchanged
+      original PDF. Existing broker highlights may also appear.
+    </div>
+    <div
+      class="pdf-page"
+      style="aspect-ratio:{{ page.width }}/{{ page.height }}"
+    >
+      <img
+        src="/page/{{ report.id }}/{{ page.number }}.png"
+        alt="Original PDF page {{ page.number }}"
+      />
+      {% for line in selected %}<span
+        class="highlight"
+        tabindex="0"
+        title="{{ line.id }}: {{ line.text }}"
+        style="left:{{ line.bbox[0]/page.width*100 }}%;top:{{ line.bbox[1]/page.height*100 }}%;width:{{ (line.bbox[2]-line.bbox[0])/page.width*100 }}%;height:{{ (line.bbox[3]-line.bbox[1])/page.height*100 }}%"
+      ></span
+      >{% endfor %}
+    </div>
+    <details class="source-text">
+      <summary>Cited passages as text</summary>
+      {% for line in selected %}
+      <p>{{ line.id }} · {{ line.text }}</p>
+      {% endfor %}
+    </details>
+    <script src="/static/source.js"></script>
+  </body>
+</html>

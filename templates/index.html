@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Find Rpt</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/"
+        >Find Rpt<span>Research, with the source beside it.</span></a
+      ><span class="tag">LOCAL · ITERATION 6</span>
+    </header>
+    <main>
+      <section class="search-panel">
+        <h1>Find the report. Understand the change.</h1>
+        <p>Search by Bloomberg ticker, research date, and broker.</p>
+        <form id="search">
+          <label
+            >Bloomberg ticker<input
+              id="ticker"
+              placeholder="SHA0 GY"
+              value="SHA0 GY"
+              required /></label
+          ><label
+            >File date<input
+              id="date"
+              type="date"
+              value="2026-06-22"
+              required /></label
+          ><label
+            >Broker<select
+              id="broker"
+              aria-label="Broker"
+              required
+            ></select></label
+          ><button>Find report</button>
+        </form>
+        <p class="small" id="coverage"></p>
+        <div class="runtime-options">
+          <label
+            >Analysis model<select
+              id="model"
+              aria-label="Analysis model"
+            ></select
+          ></label>
+          <label
+            >Reasoning effort<select
+              id="effort"
+              aria-label="Reasoning effort"
+            ></select
+          ></label>
+        </div>
+        <p class="small">
+          Applies to new briefs and follow-ups. Saved results keep their
+          original model. No automatic fallback.
+        </p>
+      </section>
+      <div id="status" role="status" aria-live="polite"></div>
+      <section id="matches"></section>
+      <div class="workspace">
+        <article id="result">
+          <div class="empty">
+            <h2>A brief you can check.</h2>
+            <p>
+              Choose a report to see what moved, why it moved, and the evidence
+              behind each claim.
+            </p>
+            <p>
+              Analysis runs through your logged-in Claude Code harness using the
+              selected model and effort. The selected report text is sent to its
+              model service. Reports and run evidence stay in this local
+              project; nothing is published.
+            </p>
+          </div>
+        </article>
+        <aside id="source-panel">
+          <div class="source-heading">
+            <strong>Source</strong
+            ><a id="source-open" target="_blank" rel="noopener" hidden
+              >Open larger ↗</a
+            >
+          </div>
+          <div id="source-empty" class="empty">
+            Select a source link beside a claim to inspect its highlighted
+            passage.
+          </div>
+          <iframe id="source" title="Highlighted source PDF" hidden></iframe>
+        </aside>
+      </div>
+      <section class="history">
+        <h2>Saved local runs</h2>
+        <div id="history"></div>
+      </section>
+    </main>
+    <script type="module" src="/static/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+[project]
+name = "find-rpt"
+version = "0.1.0"
+description = "Local sell-side research interface with a Claude Code skill baseline"
+requires-python = ">=3.11"
+dependencies = ["flask>=3.1,<4", "pymupdf>=1.26,<2", "pydantic>=2.11,<3"]
+
+[dependency-groups]
+dev = ["pytest>=8,<10"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

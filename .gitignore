@@ -1,0 +1,29 @@
+# Original source material and private working data
+/raw_file/
+/corpus/
+/local/
+/output/
+/tmp/
+*.pdf
+
+# Credentials and machine-specific configuration
+.env
+.env.*
+!.env.example
+.DS_Store
+
+# Python environments and build output
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Optional local UI dependencies
+node_modules/

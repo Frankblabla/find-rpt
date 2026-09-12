@@ -1,0 +1,7 @@
+{
+  "source_file": "/Users/macpp/.codex/sessions/2026/09/12/rollout-2026-09-12T10-52-05-01a090f0-878f-7440-9a4a-d464d6b1d70a_01a09508-040a-7300-8581-aac1e8063eda.jsonl",
+  "source_prefix_bytes": 34351887,
+  "source_prefix_sha256": "e5c605e4e9421b4dc3949d3665120fb94dd2bac4290061c92abfb7b84565d1b4",
+  "events": 8,
+  "scope": "Four actual English development call/result pairs: removal of the hard prose limit, regression adaptation and passing tests, bounded live-test launch, and historical integrity/data-map checks. Selected excerpt; no analysis, system/developer messages or Chinese planning dialogue."
+}

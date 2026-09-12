@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{ b.title }} · Find Rpt</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #18302e;
+            --muted: #60726e;
+            --accent: #146b60;
+            --line: #dbe4df
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: #f3f5f0;
+            color: var(--ink);
+            font: 16px/1.6 system-ui, -apple-system, sans-serif
+        }
+
+        main {
+            max-width: 1120px;
+            margin: 40px auto;
+            padding: 44px;
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 10px
+        }
+
+        a {
+            color: var(--accent)
+        }
+
+        h1 {
+            font-size: 32px;
+            line-height: 1.2;
+            margin: 16px 0
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 30px 0 12px
+        }
+
+        p {
+            margin: 10px 0
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            letter-spacing: .07em;
+            text-transform: uppercase;
+            color: var(--muted)
+        }
+
+        .meta,
+        small {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .takeaway {
+            font-size: 20px;
+            border-left: 4px solid var(--accent);
+            padding-left: 18px;
+            margin: 24px 0
+        }
+
+        .cite {
+            font-size: 12px;
+            white-space: nowrap;
+            margin-left: 5px
+        }
+
+        .notice {
+            padding: 12px 16px;
+            border: 1px solid #d9ba6d;
+            background: #fff7e1;
+            border-radius: 5px
+        }
+
+        .table-wrap {
+            overflow: auto
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            line-height: 1.4
+        }
+
+        th,
+        td {
+            padding: 11px 9px;
+            border-bottom: 1px solid var(--line);
+            text-align: right;
+            vertical-align: top
+        }
+
+        th:first-child,
+        td:first-child {
+            text-align: left
+        }
+
+        thead th {
+            background: #edf4f0;
+            white-space: nowrap
+        }
+
+        td small {
+            display: block;
+            font-size: 11px
+        }
+
+        details {
+            margin: 12px 0
+        }
+
+        summary {
+            cursor: pointer;
+            color: var(--accent)
+        }
+
+        pre {
+            white-space: pre-wrap;
+            background: #f6f8f5;
+            padding: 18px;
+            font: 14px/1.6 system-ui, sans-serif
+        }
+
+        footer {
+            border-top: 1px solid var(--line);
+            margin-top: 32px;
+            padding-top: 16px
+        }
+
+        .charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px
+        }
+
+        .charts figure {
+            margin: 0;
+            border: 1px solid var(--line);
+            padding: 12px;
+            border-radius: 5px
+        }
+
+        .charts figcaption {
+            font-size: 13px
+        }
+
+        .charts svg {
+            width: 100%;
+            height: auto
+        }
+
+        .charts text {
+            font: 11px system-ui;
+            fill: var(--ink)
+        }
+
+        .charts rect {
+            fill: #468e81
+        }
+
+        @media(max-width:700px) {
+            main {
+                margin: 0;
+                padding: 22px;
+                border: 0;
+                border-radius: 0
+            }
+
+            h1 {
+                font-size: 25px
+            }
+        }
+
+        @media print {
+            body {
+                background: white
+            }
+
+            main {
+                margin: 0;
+                border: 0;
+                padding: 15px
+            }
+
+            a {
+                color: inherit
+            }
+
+            details {
+                display: block
+            }
+
+            .charts figure {
+                break-inside: avoid
+            }
+        }
+    </style>
+  </head>
+  <body>
+    <main>
+      {% macro cite(refs) -%}{% if refs %}<a class="cite"
+   href="{{ source(refs) }}"
+   target="_blank"
+   rel="noopener">[source]</a>{% endif %}{%- endmacro %}
+      {% macro claim(c) -%}<p>{{ c.text }}{{ cite(c.sources) }}</p>{%- endmacro %}
+      <header>
+        <div class="eyebrow">Find Rpt · {{ result.request.ticker }} · {{ result.report.broker }}</div>
+        <h1>{{ b.title }}</h1>
+        <p class="meta">Report date {{ b.report_date }} · File date {{ result.request.lookup_date }} · Version {{ meta.version }}</p>
+        {% if result.request.selection.method == "user_confirmed" %}<p class="notice"><strong>User-confirmed file; cover ticker unverified.</strong> Selection is not source proof of the requested ticker. Source identity assessment: {{ b.subject_match }}.{{ cite(b.identity.sources) }}</p>{% else %}<p class="meta">Source identity: {{ b.subject_match }}.{{ cite(b.identity.sources) }}</p>{% endif %}
+        <p class="takeaway">{{ b.takeaway.text }}{{ cite(b.takeaway.sources) }}</p>
+      </header>
+      {% if result.get('artifact_status') == 'partial' %}
+      <p class="notice"><strong>Partial brief.</strong> This first read preserves sourced information while full extraction and review are unfinished. It is not a complete research brief.</p>
+      {% for c in b.material %}{{ claim(c) }}{% endfor %}
+      <section><h2>Still to do</h2><ul>{% for text in b.limitations %}<li>{{ text }}</li>{% endfor %}</ul></section>
+      {% else %}
+      {% if result.get('composition_notice') %}<p class="notice"><strong>Extended brief.</strong> {{ result.composition_notice }}</p>{% endif %}
+      <section><h2>What changed</h2>{% for c in b.changes %}{{ claim(c) }}{% endfor %}
+        {% if result.view.years %}<p class="notice">View filter: {{ result.view.years|join(", ") }}. Showing {{ rows|length }} of {{ b.estimates|length }} rows; all research data remains in the <a href="{{ base }}/case/{{ case_id }}/{{ meta.version }}/data.json">saved JSON</a>. The summary describes the full report.</p>{% endif %}
+        {% if rows %}<div class="table-wrap"><table><thead><tr><th>Metric / period / units</th><th>Prior figure</th><th>Stated figure</th><th>Revision</th><th>Prior vs consensus</th><th>Stated vs consensus</th></tr></thead><tbody>
+          {% for item in rows %}{% set r = item.row %}{% set c = item.comparison %}<tr><td><strong>{{ r.metric }}</strong><small>{{ r.fiscal_year }} · {{ r.units }} {{ cite(r.sources) }}</small>{% if r.note %}{% if result.view.detail == "full" %}<small>{{ r.note }}</small>{% else %}<details><summary>Row note</summary>{{ r.note }}</details>{% endif %}{% endif %}</td><td>{{ number(r.old) }}</td><td>{{ number(r.new) }}</td><td>{{ item.revision }}</td><td>{{ delta(c.before_consensus,r.units) }}<small>Consensus {{ number(r.consensus_before) }}</small></td><td>{{ delta(c.after_consensus,r.units) }}<small>Consensus {{ number(r.consensus_after) }}</small></td></tr>{% endfor %}
+        </tbody></table></div><p class="meta">Stated figures may be pre-results expectations or unchanged forecasts; read period labels and notes. Percentage levels use percentage-point differences (pp). Missing values stay unavailable. Reported rates may differ from rounded-level arithmetic.</p>{% else %}<p>No comparable estimate levels reported.</p>{% endif %}</section>
+      <section><h2>Why it changed, and why now</h2>{% if b.drivers %}<p>{% for c in b.drivers %}{{ c.text }}{{ cite(c.sources) }} {% endfor %}</p>{% endif %}{{ claim(b.context) }}</section>
+      <section><h2>The estimate picture</h2>{{ claim(b.estimate_picture) }}{% if charts %}<div class="charts">{% for chart in charts %}<figure><figcaption><strong>{{ chart.row.metric }}</strong> · {{ chart.row.fiscal_year }} · {{ chart.row.units }}{{ cite(chart.row.sources) }}</figcaption><svg viewBox="0 0 450 {{ chart.height }}"
+     role="img"
+     aria-label="{{ chart.row.metric }} {{ chart.row.fiscal_year }} comparison"><line x1="{{ chart.zero }}" x2="{{ chart.zero }}" y1="5" y2="{{ chart.height }}" stroke="#c2d2ca" />{% for p in chart.points %}<text x="0" y="{{ p.y+12 }}">{{ p.label }}</text><rect x="{{ p.x }}" y="{{ p.y }}" width="{{ p.width }}" height="16" rx="2" /><text x="375" y="{{ p.y+12 }}">{{ p.value }}</text>{% endfor %}</svg></figure>{% endfor %}</div>{% endif %}</section>
+      {% if b.material %}<section><h2>Also worth reading</h2>{% for c in b.material %}{{ claim(c) }}{% endfor %}</section>{% endif %}
+      {% if b.email_draft %}{% set d = b.email_draft %}<section><h2>Clarification draft</h2><p class="notice"><strong>Draft only — never sent.</strong> {{ b.escalation_reason }}</p><p>To: {{ d.analyst }} &lt;{{ d.to }}&gt;{{ cite(d.sources) }}<br>Subject: {{ d.subject }}</p><pre>{{ d.body }}</pre></section>{% endif %}
+      {% if b.limitations %}<details{% if result.view.detail == 'full' %} open{% endif %}><summary>Limitations</summary><ul>{% for text in b.limitations %}<li>{{ text }}</li>{% endfor %}</ul></details>{% endif %}
+      {% endif %}
+      <footer><p>Continue the discussion in the same Claude Code session. Ask for an explanation, a source check, or a new version of this HTML.</p><p class="meta">{{ meta.reason }} · {{ meta.created_at }} · {{ result.main_word_count }} main-prose words<br><a href="{{ base }}/case/{{ case_id }}">Latest version</a>{% if meta.parent_version %} · <a href="{{ base }}/case/{{ case_id }}/{{ meta.parent_version }}">Previous version</a>{% endif %} · <a href="{{ base }}/case/{{ case_id }}/{{ meta.version }}/data.json">Structured data</a><br>Original PDF SHA256: {{ meta.research_source_sha256 }}<br>Original-source highlights require the local Find Rpt viewer. Exact references establish locations, not semantic correctness.</p></footer>
+    </main>
+  </body>
+</html>

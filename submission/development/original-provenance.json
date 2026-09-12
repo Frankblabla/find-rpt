@@ -1,0 +1,45 @@
+{
+  "created_at": "2026-09-12T07:50:14.317204+00:00",
+  "examples": [
+    {
+      "file": "hexagon-brief.md",
+      "source": "local/runs/3620a1dbd1c544bbbd60ec2f21112537/result.json",
+      "source_sha256": "d4f220c12ee2ce406a0783d1b671d6ba742c879316126a852a869f79c6dcac91",
+      "run_id": "3620a1dbd1c544bbbd60ec2f21112537",
+      "report_sha256": "aefada49166bb1bb696583a77b09386cd55656191b04699e5fda97e0612bb3af"
+    },
+    {
+      "file": "grenergy-brief.md",
+      "source": "local/runs/d9bcde4ad4bb4614b066186293f6f891/result.json",
+      "source_sha256": "83d1f9b9ab067474cd1c2c405733f9f7a017b86793c0849987df627939d4c844",
+      "run_id": "d9bcde4ad4bb4614b066186293f6f891",
+      "report_sha256": "dcdf242b496251c2452abe13bb2d851b63f938cdbe89998c6c6086b412b80f90"
+    },
+    {
+      "file": "grenergy-followup.md",
+      "source": "local/runs/9e454fb280fe43cb8571f92767b4fa94/result.json",
+      "source_sha256": "7ea123fe110a2d8f04289a5b59668ae0a35f035afb11b2eed86ec884380f8960",
+      "run_id": "9e454fb280fe43cb8571f92767b4fa94",
+      "report_sha256": "dcdf242b496251c2452abe13bb2d851b63f938cdbe89998c6c6086b412b80f90"
+    }
+  ],
+  "development_transcript": {
+    "source": "local/development/actual-development.jsonl",
+    "source_snapshot_sha256": "e42f4020ed8e43d244b9c030732b286eaaed9342454ead0019d5da0ab3c972f9",
+    "source_snapshot_line_count": 2501,
+    "selected_lines": [
+      2054,
+      2185,
+      2218,
+      2222,
+      2234,
+      2449,
+      2450,
+      2454,
+      2475
+    ],
+    "thread_id": "01a09111-8531-7ab1-be86-54d9b21e79a9",
+    "scope": "Selected visible events only; no internal reasoning or Chinese planning conversation.",
+    "transformations": "JSON string escapes decoded in Markdown; original selected payload fields retained in selected-visible-events.jsonl."
+  }
+}
