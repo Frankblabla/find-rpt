@@ -26,7 +26,6 @@ In that Claude conversation:
 Explain the second change, with original source links.
 Make a compact HTML version showing only FY26 estimates.
 Add that explanation to the brief.
-Prepare a clarification email draft about the unresolved question.
 ```
 
 The project skill is discovered from [.claude/skills/find-rpt/SKILL.md](.claude/skills/find-rpt/SKILL.md).
@@ -38,11 +37,14 @@ prose target without a length-only rejection or retry. Do not launch with `--saf
 skills. Model/effort are selectable through Claude launch options; Opus/high is
 our launch recommendation, not a forced setting in the skill.
 
-Every HTML includes an email decision. Unexplained estimate revisions trigger a
-draft automatically. Otherwise it says why none is needed: no identified revisions
-or stated reasons. A user-requested draft is labelled separately; it can exist even
-when automatic revision clarification is unnecessary. Partial output says the
-decision is not yet assessed.
+The brief shows one email outcome: the draft itself, or one sentence explaining
+why no draft was created. Unexplained estimate revisions trigger a draft
+automatically. A separate draft can be requested later in the conversation.
+The default CPG example has no identified revisions and no email draft.
+
+The page prioritizes cited findings and estimate tables. Empty comparison columns
+are omitted; zero values remain visible. Charts and processing details are
+available on expansion. Default examples show all saved estimate rows.
 
 Q&A saves a short cited answer and leaves the HTML unchanged. Presentation changes
 create a new HTML version from the same validated data. Content changes are
@@ -136,7 +138,7 @@ uv run pytest -q
 node --test tests/*.test.mjs
 ```
 
-Current checks: **137 Python tests and 11 JavaScript tests pass**. These include explicit email decisions and follow-up after historical-output cleanup. The six-turn
+Current checks: **138 Python tests and 11 JavaScript tests pass**. These include explicit email decisions and follow-up after historical-output cleanup. The six-turn
 [real native exercise](submission/examples/native-conversation.md)
 produced four HTML versions and five answers, with two explicit review corrections.
 The earlier [ten-report evaluation](submission/evaluation.md) saved

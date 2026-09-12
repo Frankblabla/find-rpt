@@ -16,7 +16,7 @@ so a repository checkout does not depend on an ignored local evidence index.
 ## Examples and their scope
 
 - **Swatch brief** retains the research output from the thirteen-broker evaluation,
-  refreshed with the current email-status display and latest-only navigation.
+  refreshed with one email outcome, a simpler table, expandable charts/details and current-output navigation.
   The original same-agent review corrected an unsupported unchanged-rating inference. The
   selected source spot-check found no unsupported final claim within its limited
   scope. This presentation refresh adds no new semantic review. Share-class/exchange identity remains ambiguous.

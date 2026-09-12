@@ -23,14 +23,14 @@ Python tools and versioned HTML. The earlier web/batch baseline remains usable.
 | Reasons, context and useful comparisons | Cited driver/context paragraphs, material/conflict statements, estimate tables and bounded charts. Extraction can still omit material rows or image-only tables. |
 | Original-source links | Local PDF highlights with source coordinates and hash checks. Exact quotations establish traceability, not complete semantic support. |
 | Plain English and concise first read | Approximately 220 prose words is editorial guidance. Required facts may exceed it without rejection. Tables and separate answers are outside that count. |
-| Clarification email | Automatic draft for revisions without a clear applicable rationale; explicit no-draft reason otherwise. User-requested drafts are labelled separately. Sourced analyst name/address or TODO recipient, metric/year questions and fixed sender; draft only. No send endpoint or email-service dependency. Draft necessity can still be overestimated. |
+| Clarification email | Automatic draft for revisions without a clear applicable rationale; one no-draft reason otherwise. Explicitly requested drafts remain available, without a contradictory no-draft message. Sourced analyst name/address or TODO recipient, metric/year questions and fixed sender; draft only. No send endpoint or email-service dependency. Draft necessity can still be overestimated. |
 | Easy follow-up | Same native conversation and resume; distinct short answers, presentation changes, content amendments and draft edits with preserved versions. Actual six-turn example retains two reviewer corrections. |
 | Useful output after interruption | Source-backed partial first read, then full publication; model-free delivery returns the latest verified artifact. No guarantee exists before the first save. |
 | Lightweight hallucination check | Bounded same-agent source review. Its scope/findings are recorded; review-file existence does not prove completed review or factual correctness. |
 
 ## Evidence and limits
 
-Current offline checks are **137 Python and 11 JavaScript passing tests**.
+Current offline checks are **138 Python and 11 JavaScript passing tests**.
 The [evaluation summary](../submission/evaluation.md) records thirteen full HTML artifacts, ten normal native
 completions and three post-publication budget stops. It records source-review
 limitations, failed tool calls, costs and preserved historical outcomes.

@@ -27,10 +27,10 @@
     },
     {
       "file": "examples/swatch-brief.html",
-      "source": "local/cases/68a4ad2f568a4750b3ea3f3e0a9e93c0/versions/0004/brief.html",
-      "sha256": "e0af7a7fcdb3ed943923b8a6b22aae0ca044c9304e214ae0b3e00ed416fdb634",
-      "transformation": "Current presentation-only refresh with whitespace-only HTML lines normalized for the source repository. Research evidence and brief values match original version 3; no new model invocation or semantic review.",
-      "source_sha256": "9e1a9cae3386b1627153739df86f11132449b7621dadf7e4e1808d1ae2560377"
+      "source": "local/cases/68a4ad2f568a4750b3ea3f3e0a9e93c0/versions/0005/brief.html",
+      "sha256": "692512908fefc5fdd7e1dc959c63ce40a4340b20020a6a90772e19c37fe86b32",
+      "transformation": "Current simplified rendering, with whitespace-only HTML lines normalized for the repository. Extracted research data matches the original evaluated result; no new model invocation or semantic review.",
+      "source_sha256": "ca53d45cf3bde88254f3a708f5fb53a9930a129ba45e6193a2e789cd539b2f8c"
     },
     {
       "file": "development/transcript.md",

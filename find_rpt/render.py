@@ -101,6 +101,13 @@ def render_html(result, case_id, meta):
             result=result,
             b=b,
             rows=rows,
+            show_prior=any(item["row"]["old"] is not None for item in rows),
+            show_prior_consensus=any(
+                item["row"]["consensus_before"] is not None for item in rows
+            ),
+            show_current_consensus=any(
+                item["row"]["consensus_after"] is not None for item in rows
+            ),
             charts=charts,
             meta=meta,
             case_id=case_id,

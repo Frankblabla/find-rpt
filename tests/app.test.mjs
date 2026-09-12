@@ -87,6 +87,7 @@ test('manual notice survives source confirmation and mismatch hides all brief an
     result.brief.subject_match=assessment; vm.runInContext('render(fixture)',u.context);
     assert.match(u.element('result').innerHTML,/User-confirmed file selection; cover ticker unverified/);
     assert.match(u.element('result').innerHTML,/Synthetic draft content/);
+    assert.doesNotMatch(u.element('result').innerHTML,/No email drafted|Email draft unavailable/);
   }
   result.brief.subject_match='mismatch'; result.brief.identity={...fact,text:'Wrong subject'};
   vm.runInContext('render(fixture)',u.context);
@@ -104,12 +105,12 @@ test('email status explains no revisions, a stated cause, or a missing required 
   },comparisons:[]};
   for (const [revisions,rationale,message] of [
     [false,'not_applicable','no estimate revisions were identified'],
-    [true,'clear','the identified revisions have a stated rationale'],
-    [true,'unclear','A required draft is missing'],
+    [true,'clear','the report explains the identified estimate revisions'],
+    [true,'unclear','Email draft unavailable'],
   ]) {
     Object.assign(fixture.brief,{revisions_present:revisions,rationale});
     u.context.fixture=fixture; vm.runInContext('render(fixture)',u.context);
     assert.ok(u.element('result').innerHTML.includes(message));
-    assert.equal(u.element('result').innerHTML.includes('No email draft was generated.'), !revisions || rationale==='clear');
+    assert.equal(u.element('result').innerHTML.includes('No email drafted:'), !revisions || rationale==='clear');
   }
 });

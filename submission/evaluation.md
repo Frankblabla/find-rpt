@@ -82,9 +82,18 @@ decision for automatic, unnecessary, user-requested and unfinished cases.
 The extraction guidance clarifies absent or unclear applicable reasons without
 requiring a full quantitative bridge. No model batch was rerun for this change.
 
-The final offline suite passes 137 Python and 11 JavaScript cases, including
+The final offline suite passes 138 Python and 11 JavaScript cases, including
 follow-up after old local versions are retired. Current local HTML was refreshed
 without changing research evidence, brief values or comparisons. Original
 submitted excerpts remain unchanged; required private source evidence is
 consolidated separately. These interface checks do not upgrade historical model
 results or establish improved semantic accuracy.
+
+
+The final readability pass replaces simultaneous automatic-status and draft
+blocks with one exclusive email outcome. CPG's default demonstration no longer
+contains its test-requested draft or FY26-only filter. Its eight extracted rows
+and original evidence remain unchanged. Comparison charts and processing metadata
+are collapsed; entirely missing comparison columns are omitted without hiding
+zeros. These display changes were checked offline and in the local viewer,
+without another model invocation.

@@ -132,25 +132,20 @@ function render(result) {
       "Also worth reading",
       b.material.map((c) => claim(c)).join(""),
     );
-  const automaticEmailStatus = !b.revisions_present
-    ? "No automatic email draft is needed: no estimate revisions were identified in this report."
-    : b.rationale === "clear"
-      ? "No automatic email draft is needed: the identified revisions have a stated rationale."
-      : "An automatic clarification draft is required: at least one revision lacks a clear, applicable rationale.";
-  let emailStatus = `<p>${automaticEmailStatus}</p>`;
-  if (!b.email_draft) {
-    const missingDraft = b.revisions_present && b.rationale !== "clear";
-    emailStatus += `<p>${missingDraft
-      ? "A required draft is missing. Review the saved result before treating the brief as complete."
-      : "No email draft was generated."}</p>`;
-  }
-  content += section("Email draft status", emailStatus);
   if (b.email_draft) {
     const d = b.email_draft;
     content += section(
-      "Clarify with the covering analyst",
-      `<p>${escape(b.escalation_reason)}</p><p>A draft is ready for your review.</p><div class="draft"><span class="tag">DRAFT ONLY</span><p><strong>To:</strong> ${escape(d.analyst)} &lt;${escape(d.to)}&gt;${sourceLink(d.sources, "Analyst and revisions")}</p><p><strong>Subject:</strong> ${escape(d.subject)}</p><pre>${escape(d.body)}</pre></div>`,
+      "Email draft",
+      '<p>Draft only — never sent.</p>' +
+      `<div class="draft"><p><strong>To:</strong> ${escape(d.analyst)} &lt;${escape(d.to)}&gt;${sourceLink(d.sources, "Analyst and revisions")}</p><p><strong>Subject:</strong> ${escape(d.subject)}</p><pre>${escape(d.body)}</pre></div>`,
     );
+  } else {
+    const reason = !b.revisions_present
+      ? "No email drafted: no estimate revisions were identified in this report."
+      : b.rationale === "clear"
+        ? "No email drafted: the report explains the identified estimate revisions."
+        : "Email draft unavailable: some revisions remain unexplained. The clarification step is incomplete.";
+    content += section("Email", `<p>${reason}</p>`);
   }
   if (b.answer.length)
     content += section(

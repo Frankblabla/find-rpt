@@ -350,8 +350,8 @@ evidence hashes detect changed saved versions; saved answers have hashes too.
 No older artifact is overwritten. After an interrupted write, inspect the case
 before removing a leftover lock; the tools do not guess or silently retry.
 
-The template renders escaped text, an estimate table and up to three SVG charts
-without a model or external assets. Compact mode collapses notes; year filters
+The template renders escaped text and an estimate table without a model or external
+assets. Up to three comparison charts are available in a collapsed details section. Compact mode collapses notes; year filters
 affect the view, not the evidence. Percentage levels display differences in
 percentage points; notes distinguish unchanged and pre-results figures.
 
@@ -393,24 +393,25 @@ OCR service, vector database or mail integration is needed for this scope.
 
 ## Email decisions and current output navigation
 
-Full publication automatically creates a clarification draft when a changed
-estimate has reason=not_stated. The extraction instructions use that assessment
-for absent or unclear applicable causes. A clear qualitative explanation is
-sufficient; a complete numerical bridge is not required. The model still owns
-the semantic assessment; the tool validates references and enforces the trigger.
+Full publication automatically drafts an email when a changed estimate has
+reason=not_stated: no clear, applicable rationale. A qualitative explanation can
+suffice; the model still owns that assessment and the tool enforces the trigger.
 
-The HTML always shows Email draft status, including why no automatic draft is
-needed: no identified estimate revisions, or stated causes for the revisions.
-A partial brief says the assessment is unfinished. A user-requested draft is
-explicitly labelled as additional and can coexist with no automatic need.
-For example, CPG has no identified forecast revision but its saved conversation
-requested a separate unit-clarification draft. Those statements are compatible.
-The template also exposes an inconsistent missing required draft rather than
-silently treating it as a completed no-draft decision.
+The HTML uses mutually exclusive branches. If a draft exists, show that draft.
+Otherwise show one reason: no identified estimate revisions, stated revision
+causes, unfinished analysis, or an incomplete clarification step. Never show a
+no-draft statement beside a draft. A draft explicitly requested later remains
+supported, but test-requested drafts are not part of the default examples.
 
-Native display is in templates/brief.html; the maintained web form has its own
-display in static/app.js. Both use the existing brief fields, with no new status
-object, database or email dependency.
+The current CPG demonstration shows all eight rows and no draft. Its earlier
+test-requested unit-clarification email remains only in the original audit record.
+This cleanup changes no extracted evidence or estimate comparisons.
+
+Native rendering is in templates/brief.html and render.py. Empty prior/consensus
+columns are omitted using explicit None checks, so zero is not hidden. Key
+findings, context, estimates and uncertainties remain visible. Comparison charts,
+processing metadata, hashes and length information are collapsed. The maintained
+web form in static/app.js uses the same exclusive email outcomes.
 
 Normal updates save a new version so failures do not destroy valid output.
 The local cleanup retains one current HTML per case. Explicitly retired version

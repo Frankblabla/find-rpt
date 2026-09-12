@@ -135,6 +135,41 @@ def test_identity_gate_applies_before_publication(corpus):
     assert cases.context(ctx["id"])["latest_version"] == 0
 
 
+def test_comparison_columns_omit_missing_data_but_keep_zero(published):
+    from find_rpt.render import render_html
+    from find_rpt.schema import Estimate, comparisons
+
+    _, result, meta = cases.version(published)
+    result["brief"]["revisions_present"] = False
+    for row in result["brief"]["estimates"]:
+        row.update(old=None, consensus_before=None, consensus_after=None)
+    for row in result["evidence"]["estimates"]:
+        row["reason"] = "not_a_revision"
+    result["comparisons"] = [
+        comparisons(Estimate.model_validate(row))
+        for row in result["brief"]["estimates"]
+    ]
+    html = render_html(result, published, meta)
+    assert "<th>Prior figure</th>" not in html
+    assert "<th>Revision</th>" not in html
+    assert "<th>Prior vs consensus</th>" not in html
+    assert "<th>Reported vs consensus</th>" not in html
+    assert "<th>Reported figure</th>" in html
+
+    result["brief"]["estimates"][0].update(old=0, consensus_before=0, consensus_after=0)
+    result["brief"]["revisions_present"] = True
+    result["evidence"]["estimates"][0]["reason"] = "not_stated"
+    result["comparisons"][0] = comparisons(
+        Estimate.model_validate(result["brief"]["estimates"][0])
+    )
+    html = render_html(result, published, meta)
+    assert "<th>Prior figure</th>" in html
+    assert "<th>Revision</th>" in html
+    assert "<th>Prior vs consensus</th>" in html
+    assert "<th>Reported vs consensus</th>" in html
+    assert "<td>0</td>" in html and "Consensus 0" in html
+
+
 def test_retired_history_keeps_latest_context_and_followups_usable(published):
     import shutil
 
@@ -179,15 +214,20 @@ def test_publication_explains_automatic_email_decision(published, scenario):
     html = (path / "brief.html").read_text()
     assert 'id="email-draft"' in html
     assert bool(result["brief"]["email_draft"]) == (scenario in {"unexplained", "requested"})
-    if scenario in {"no_revision", "requested"}:
+    if scenario == "no_revision":
         assert "no estimate revisions were identified" in html
     if scenario == "clear":
-        assert "the identified revisions have a stated rationale" in html
+        assert "the report explains the identified estimate revisions" in html
     if scenario == "unexplained":
-        assert "Generated automatically for unexplained revisions" in html
+        assert "For estimate revisions whose rationale remains unclear" in html
     if scenario == "requested":
-        assert "Additional draft requested by the user" in html
-        assert "No email draft was generated" not in html
+        assert "Requested in the conversation" in html
+    if scenario in {"requested", "unexplained"}:
+        assert "No email drafted" not in html
+        assert "Email draft unavailable" not in html
+    else:
+        assert "<h2>Email draft</h2>" not in html
+        assert "<pre>" not in html
 
 
 def checkpoint_file(case_id):
