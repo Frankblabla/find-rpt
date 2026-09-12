@@ -351,7 +351,7 @@ No older artifact is overwritten. After an interrupted write, inspect the case
 before removing a leftover lock; the tools do not guess or silently retry.
 
 The template renders escaped text and an estimate table without a model or external
-assets. Up to three comparison charts are available in a collapsed details section. Compact mode collapses notes; year filters
+assets. Causes share one paragraph with their individual citations; context is a second paragraph, matching the candidate brief. Up to three comparison charts are available in a collapsed details section. Compact mode collapses notes; year filters
 affect the view, not the evidence. Percentage levels display differences in
 percentage points; notes distinguish unchanged and pre-results figures.
 

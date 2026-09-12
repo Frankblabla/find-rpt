@@ -135,6 +135,23 @@ def test_identity_gate_applies_before_publication(corpus):
     assert cases.context(ctx["id"])["latest_version"] == 0
 
 
+def test_reasons_and_context_use_two_paragraphs_with_inline_sources(published):
+    from find_rpt.render import render_html
+
+    _, result, meta = cases.version(published)
+    result["brief"]["drivers"] = [
+        dict(text="Higher demand lifts earnings.", sources=["p1l4"]),
+        dict(text="Better pricing supports margins.", sources=["p1l5"]),
+    ]
+    html = render_html(result, published, meta)
+    section = html.split("<h2>Reasons and context</h2>", 1)[1].split("</section>", 1)[0]
+    assert section.count("<p>") == 2
+    assert "Higher demand lifts earnings." in section
+    assert "Better pricing supports margins." in section
+    assert "refs=p1l4" in section and "refs=p1l5" in section
+    assert result["brief"]["context"]["text"] in section
+
+
 def test_comparison_columns_omit_missing_data_but_keep_zero(published):
     from find_rpt.render import render_html
     from find_rpt.schema import Estimate, comparisons

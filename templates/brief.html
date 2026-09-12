@@ -73,7 +73,7 @@
     {% endif %}
     <section>
       <h2>Reasons and context</h2>
-      {% for c in b.drivers %}{{ claim(c) }}{% endfor %}
+      {% if b.drivers %}<p>{% for c in b.drivers %}{{ c.text }}{{ cite(c.sources) }} {% endfor %}</p>{% endif %}
       {{ claim(b.context) }}
     </section>
     <section>

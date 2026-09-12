@@ -8,7 +8,7 @@ uv run pytest -q
 node --test tests/*.test.mjs
 ```
 
-The suite has **138 Python cases and 11 JavaScript cases**. It uses temporary
+The suite has **139 Python cases and 11 JavaScript cases**. It uses temporary
 synthetic PDFs and fake model processes. It does not require the private corpus,
 Claude authentication, a running server, network access or paid model calls.
 Python verifies behavior through direct functions, the CLI boundary and Flask's
@@ -19,7 +19,7 @@ needed. PyMuPDF currently emits five upstream deprecation warnings.
 
 | File | What it checks |
 | --- | --- |
-| `test_cases.py` | Native case lifecycle: partial/full publication, Q&A, version preservation, stale updates, recovery, exclusive draft/no-draft outcomes, empty-versus-zero comparison columns, retired-history follow-up, drafts and tampering |
+| `test_cases.py` | Native case lifecycle: partial/full publication, Q&A, version preservation, stale updates, recovery, exclusive draft/no-draft outcomes, empty-versus-zero comparison columns, two-paragraph reasons/context, retired-history follow-up, drafts and tampering |
 | `test_evidence.py` | Extraction/selection contracts, retained facts, source support, composition and baseline process failures |
 | `test_comparison_picture.py` | Fiscal periods, comparison grouping, target labels, reported bps, qualitative revisions and arithmetic boundaries |
 | `test_selection.py` | Ticker identity, manual confirmation, provenance, selected-source access and CLI selection |

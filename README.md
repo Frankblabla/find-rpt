@@ -11,8 +11,9 @@ working baseline and supplies the local PDF highlight viewer.
 
 ## Start here
 
-Requires Python 3.11+, `uv`, and Claude Code installed and signed in. Run from
-this repository:
+Requires Python 3.11+, `uv`, and Claude Code installed and signed in. For a fresh
+checkout, first follow [Source files and artifacts](#source-files-and-artifacts)
+to place the supplied PDFs and restore the manifest. Then run from this repository:
 
 ```bash
 uv sync --locked
@@ -138,7 +139,7 @@ uv run pytest -q
 node --test tests/*.test.mjs
 ```
 
-Current checks: **138 Python tests and 11 JavaScript tests pass**. These include explicit email decisions and follow-up after historical-output cleanup. The six-turn
+Current checks: **139 Python tests and 11 JavaScript tests pass**. A final targeted check also completed two fresh report sessions and two follow-ups; see the [submission review](docs/deliverables.md) for outcomes and remaining limitations. These include explicit email decisions and follow-up after historical-output cleanup. The six-turn
 [real native exercise](submission/examples/native-conversation.md)
 produced four HTML versions and five answers, with two explicit review corrections.
 The earlier [ten-report evaluation](submission/evaluation.md) saved
@@ -147,7 +148,7 @@ nine briefs, including two budget interruptions; one report had no HTML.
 observed target-label and bps defects and remove the hard prose limit. The old
 batch is not relabelled as a pass.
 
-The latest [thirteen-broker evaluation](submission/evaluation.md)
+The earlier [thirteen-broker evaluation](submission/evaluation.md)
 saved **13 full HTML briefs**: ten native sessions ended normally and three hit
 their cost caps after publication. Model-free delivery recovered all saved links.
 It checked 227 latest estimate rows and 1,539 exact quote lines without structural
