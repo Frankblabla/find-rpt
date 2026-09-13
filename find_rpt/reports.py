@@ -10,7 +10,7 @@ from pathlib import Path
 import pymupdf
 
 ROOT = Path(__file__).resolve().parents[1]
-CORPUS = ROOT / "raw_file/candidate/corpus"
+CORPUS = ROOT / "corpus"
 LOCAL = ROOT / "local"
 
 

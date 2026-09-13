@@ -6,7 +6,7 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-files = sorted((ROOT / "raw_file/candidate/corpus").glob("*.pdf"))
+files = sorted((ROOT / "corpus").glob("*.pdf"))
 rows = []
 for path in files:
     date, broker, _ = path.stem.split("_", 2)

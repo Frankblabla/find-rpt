@@ -23,7 +23,7 @@ BASE = ROOT / "local/iteration-05-development"
 EVALUATION = BASE / "heldout"
 FREEZE = BASE / "product-freeze.json"
 SPLIT = ROOT / "local/split.json"
-CORPUS = ROOT / "raw_file/candidate/corpus"
+CORPUS = ROOT / "corpus"
 BROKERS = (
     "Bestinver Securities", "CIC Corporate & Institutional Banking",
     "Goldman Sachs", "Jefferies",

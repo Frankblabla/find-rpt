@@ -80,7 +80,7 @@ not claim a completed review just because HTML exists.
 ## Source files and artifacts
 
 This workspace already has the private corpus and manifest. For a fresh checkout,
-put the supplied PDFs under `raw_file/candidate/corpus/` with their original names,
+put the supplied PDFs directly under [`corpus/`](corpus/README.md) with their original names,
 then restore the bundled metadata-only manifest:
 
 ```bash
@@ -89,7 +89,8 @@ cp -n submission/corpus-manifest.json local/split.json
 ```
 
 The copy preserves an existing local manifest. PDFs and runtime data remain
-excluded from Git. The bundled split retains historical labels and isolation
+excluded from Git; only `corpus/README.md` is tracked inside the corpus directory.
+The bundled split retains historical labels and isolation
 wording; current ordinary application access includes all 101 entries. Only for
 a genuinely different corpus, create a new manifest before inspecting reports
 with `uv run python evals/reserve.py`; never replace this corpus's established split.
@@ -109,6 +110,7 @@ use the same setting when creating HTML and starting the viewer.
 ## Repository map
 
 ```text
+corpus/        Local source PDFs; only the placement instructions are committed
 find_rpt/       Core functions, data validation and case tools
 .claude/        Primary native Claude Code skill
 app.py          Earlier web baseline and shared local source viewer

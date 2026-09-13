@@ -1,6 +1,7 @@
 # Original source material and private working data
 /raw_file/
-/corpus/
+/corpus/*
+!/corpus/README.md
 /local/
 /output/
 /tmp/
