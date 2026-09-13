@@ -1,5 +1,13 @@
 # Submission contents
 
+**[View results by broker](evaluation.md)** · **[How to open the brief and follow up](../README.md#read-the-brief-and-follow-up)**
+
+Enter `/find-rpt` with the ticker, date and broker in Claude Code's terminal
+conversation. **Open the HTML link in the agent's reply** to read the result in a
+browser. Click a citation to inspect the highlighted original PDF. Then return to
+the **same terminal conversation** to ask questions or request a new HTML version.
+Email is draft-only.
+
 Start with the repository [README](../README.md) to run the agent, then use the
 [implementation walkthrough](../docs/implementation.md) to understand its design.
 The [deliverable checklist](../docs/deliverables.md) maps the candidate brief to
@@ -35,8 +43,8 @@ in `corpus/`, as described in the root README. The standalone HTML and Markdown 
 readable without the viewer; retired local HTML links redirect to current results; exact historical versions are
 kept only in the private evidence archive. Original PDFs are not included.
 
-[Evaluation summary](evaluation.md) records test counts, actual broker attempts,
-client costs and known limitations. Necessary private audits are consolidated in `local/evidence/` and are
+[Results by broker](evaluation.md) shows recorded deliveries, completed workflows,
+and source-review findings in one table. Necessary private audits are consolidated in `local/evidence/` and are
 not necessary to read the included summary or examples.
 
 ## Log provenance and sharing boundary

@@ -20,14 +20,56 @@ uv sync --locked
 claude --model opus --effort high
 ```
 
-In that Claude conversation:
+At the Claude Code prompt in your terminal, submit this request and wait for the
+agent's response:
 
 ```text
 /find-rpt "CPG LN" 2026-05-11 "Jefferies"
-Explain the second change, with original source links.
+```
+
+## Read the brief and follow up
+
+1. **Open the link returned by Claude.** Its response includes a local HTML URL
+   such as `http://127.0.0.1:8765/case/CASE_ID/VERSION`. Click that link in your
+   terminal, or copy the complete URL into a browser. An early link may be marked
+   **partial**; the agent continues and returns the full brief when ready.
+2. **Read the generated HTML in the browser.** It contains the findings, estimate
+   table, uncertainties and one email outcome: a draft, or a reason no draft was
+   created. The CPG example normally has no identified revisions and no draft.
+3. **Click a citation beside a claim or value.** The local viewer opens the
+   original PDF with the referenced lines highlighted. Use it to check the source,
+   then return to the brief.
+4. **Return to the same Claude Code conversation in your terminal.** Submit one
+   follow-up at a time. The browser displays artifacts; Claude Code handles the
+   continuing conversation.
+
+For example:
+
+```text
+Explain the FY26 guidance, with original source links.
+```
+
+That saves a cited answer and leaves the HTML unchanged. To change the page, ask:
+
+```text
 Make a compact HTML version showing only FY26 estimates.
+```
+
+To add new explanation to its content, ask:
+
+```text
 Add that explanation to the brief.
 ```
+
+For each HTML update, open the new link returned by Claude. If the local link
+does not open, start the viewer in another terminal from this repository, then
+retry the link:
+
+```bash
+uv run python -m find_rpt.tools serve
+```
+
+## Workflow and configuration
 
 The project skill is discovered from [.claude/skills/find-rpt/SKILL.md](.claude/skills/find-rpt/SKILL.md).
 Use ordinary native tool permissions; trust this repository and allow its local
@@ -125,41 +167,27 @@ path. It is not a second agent inside the native workflow.
 | Understand the current implementation | [Code walkthrough](docs/implementation.md): execution path, data-object map and six code-reading stops |
 | Review the submission | [Submission contents](submission/README.md), then the [deliverable checklist](docs/deliverables.md) if needed |
 | Understand or run the tests | [Test guide](tests/README.md): behavior map, shared fixtures and offline commands |
-| Review outcomes and limitations | [Evaluation summary](submission/evaluation.md) |
+| Review outcomes and limitations | [Results by broker](submission/evaluation.md) |
 
 ```bash
 uv run pytest -q
 node --test tests/*.test.mjs
 ```
 
-Current checks: **142 Python tests and 11 JavaScript tests pass**. A final targeted check also completed two fresh report sessions and two follow-ups; see the [submission review](docs/deliverables.md) for outcomes and remaining limitations. These include explicit email decisions and follow-up after historical-output cleanup. The six-turn
-[real native exercise](submission/examples/native-conversation.md)
-produced four HTML versions and five answers, with two explicit review corrections.
-The earlier [ten-report evaluation](submission/evaluation.md) saved
-nine briefs, including two budget interruptions; one report had no HTML.
-[Preserved-input regressions](submission/evaluation.md) address its
-observed target-label and bps defects and remove the hard prose limit. The old
-batch is not relabelled as a pass.
+Current checks: **142 Python tests and 11 JavaScript tests pass**. These synthetic
+checks verify application behavior; source correctness still requires review.
 
-The earlier [thirteen-broker evaluation](submission/evaluation.md)
-saved **13 full HTML briefs**: ten native sessions ended normally and three hit
-their cost caps after publication. Model-free delivery recovered all saved links.
-It checked 227 latest estimate rows and 1,539 exact quote lines without structural
-errors; source spot-checks still found interpretation, citation and handoff
-limitations. Client-reported list-cost estimate: **USD32.256323**.
+The [broker results table](submission/evaluation.md) summarizes 25 recorded native
+report attempts: 24 full HTML deliveries and 19 full deliveries with normal session
+completion. Batch versions, failures and source-review findings remain explicit.
+These are historical development checks, not a uniform current-version accuracy
+benchmark. The [real native conversation](submission/examples/native-conversation.md)
+also demonstrates source Q&A, HTML changes and resume with reviewer corrections.
 
-The corpus has 29 broker labels. This product version has attempts for 13;
-all historical versions together have attempts for 29, including failures.
-See the [coverage breakdown](docs/deliverables.md#broker-coverage). These counts
-are neither all-broker accuracy nor current-version regression coverage of all 29.
-
-Synthetic checks do not establish research accuracy. Exact citations prove source
-locations and quotations, not that every claim is correctly interpreted. The skill
-can make one focused correction after a validation error; a remaining failure
-keeps the last valid artifact. Rejected tool inputs are retained.
-
-The [evaluation summary](submission/evaluation.md) and selected examples are
-included. The necessary private evidence is consolidated under `local/evidence/` and is not published.
+Exact citations establish source locations and quotations; they cannot guarantee
+interpretation or completeness. Original run evidence stays private under
+`local/evidence/`. A future evaluation is limited to 30 distinct companies and
+has not been started.
 
 ## Earlier baseline
 

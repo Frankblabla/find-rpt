@@ -38,8 +38,9 @@ prose for faithful financial terminology and count the actual displayed words.
 - For non-fiscal target rows, preserve sourced ADR/currency/month qualifiers;
   reject missing forecast periods and unsupported qualifiers. Record an offline
   revalidation separately from the original failed fresh attempt.
-- Count locally generated comparison/contact wording within the 220-word limit;
-  preserve every mandatory fact and reject genuine overflow without truncation.
+- Assess concise prose against the approximate 220-word target, including generated
+  comparison/contact wording. Preserve mandatory facts; length alone must not fail
+  publication or trigger a retry.
 
 - Check every factual clause in an expandable note against the lines that the note
   actually highlights, including other measures/years/values. Valid row sources
