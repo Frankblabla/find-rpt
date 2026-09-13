@@ -23,11 +23,11 @@ so a repository checkout does not depend on an ignored local evidence index.
 
 ## Examples and their scope
 
-- **Swatch brief** retains the research output from the thirteen-broker evaluation,
-  refreshed with one email outcome, a simpler table, expandable charts/details and current-output navigation.
-  The original same-agent review corrected an unsupported unchanged-rating inference. The
-  selected source spot-check found no unsupported final claim within its limited
-  scope. This presentation refresh adds no new semantic review. Share-class/exchange identity remains ambiguous.
+- **Swatch brief** is a fresh output from the current workflow regression. It
+  completed normally and returned its saved full link. A source spot-check covered
+  the takeaway and selected estimate rows; it is not a full accuracy certificate.
+  Share-class/exchange identity remains explicitly ambiguous. No semantic edits
+  were made to the submitted copy.
 - **Native conversation** contains six actual product-use turns demonstrating
   source Q&A, presentation changes, content amendment and resume. It preserves
   two reviewer corrections. It is a development example, not a blind holdout or
@@ -40,8 +40,9 @@ so a repository checkout does not depend on an ignored local evidence index.
 
 Source links open the local viewer on port 8765 and require the authorized PDFs
 in `corpus/`, as described in the root README. The standalone HTML and Markdown are
-readable without the viewer; retired local HTML links redirect to current results; exact historical versions are
-kept only in the private evidence archive. Original PDFs are not included.
+readable without the viewer. Example case/version links require the original
+private case state; generate your own brief using the root README for a new local
+case. Exact historical versions remain in the private evidence archive. Original PDFs are not included.
 
 [Results by broker](evaluation.md) shows recorded deliveries, completed workflows,
 and source-review findings in one table. Necessary private audits are consolidated in `local/evidence/` and are
@@ -57,8 +58,9 @@ credentials are excluded.
 
 [Copy provenance](provenance.json) records each included artifact's original
 local path and SHA-256. The adjacent development provenance files retain original
-line numbers and source hashes. Development excerpts are exact copies. The current Swatch HTML has only whitespace-only lines normalized, as recorded in provenance; old
-claims, failed attempts and review corrections were not rewritten to look better.
+line numbers and source hashes. Development excerpts are exact copies. The fresh Swatch HTML has only
+whitespace-only lines normalized, as recorded in provenance. Earlier failures and
+review corrections remain in their original records.
 Absolute paths in genuine logs describe the original development workspace and
 are not fresh-checkout run instructions.
 

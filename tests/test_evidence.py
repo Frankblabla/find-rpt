@@ -93,6 +93,15 @@ def test_overflow_preserves_full_sentences_and_mandatory_conflict():
     assert compose(e, CHOICE, REQUEST).material[0].text == f.text
 
 
+def test_long_required_fact_is_preserved_without_a_length_failure():
+    e = extracted()
+    e.takeaway.text = "The source provides context. " * 20
+    e.answer = [e.takeaway.model_copy(update={"id": "f99"})]
+    b = compose(validate_extraction(e, LINES), CHOICE, REQUEST)
+    assert b.takeaway.text == e.takeaway.text
+    assert b.answer[0].text == e.answer[0].text
+
+
 def test_stated_cause_does_not_require_numerical_bridge_email():
     e = extracted()
     e.estimates[0].note = "No full accounting bridge or prior consensus is provided."

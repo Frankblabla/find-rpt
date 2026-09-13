@@ -1,5 +1,5 @@
 {
-  "scope": "Selected submission examples and genuine English development excerpts. Source PDFs, hidden reasoning and Chinese planning are excluded. Required original evidence is preserved in the private evidence archive; the current Swatch display is explicitly labelled as a presentation-only refresh.",
+  "scope": "Selected submission examples and genuine English development excerpts. The Swatch HTML is from the current frozen workflow regression. Source PDFs, hidden reasoning and Chinese planning are excluded; original evidence remains private.",
   "files": [
     {
       "file": "examples/hexagon-brief.md",
@@ -27,10 +27,10 @@
     },
     {
       "file": "examples/swatch-brief.html",
-      "source": "local/cases/68a4ad2f568a4750b3ea3f3e0a9e93c0/versions/0005/brief.html",
-      "sha256": "692512908fefc5fdd7e1dc959c63ce40a4340b20020a6a90772e19c37fe86b32",
-      "transformation": "Current simplified rendering, with whitespace-only HTML lines normalized for the repository. Extracted research data matches the original evaluated result; no new model invocation or semantic review.",
-      "source_sha256": "ca53d45cf3bde88254f3a708f5fb53a9930a129ba45e6193a2e789cd539b2f8c"
+      "source": "local/cases/02f913f7c1ef4244b51a27d8c399ed44/versions/0002/brief.html",
+      "sha256": "b0071509e37250245039f30f5c5eb4fab23d0c1d7c25cea544d1da359313380d",
+      "transformation": "Fresh native workflow regression output with normal completion and latest-link handoff. Only whitespace-only HTML lines normalized for the repository; no semantic edits. Scoped source spot-check and remaining identity ambiguity recorded in the evaluation.",
+      "source_sha256": "0ec1ec1e8a839a370ce4edca9e7390e4ab7c6434f4dcb454fc9bd70620c4bbf7"
     },
     {
       "file": "development/transcript.md",

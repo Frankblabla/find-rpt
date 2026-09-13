@@ -241,6 +241,10 @@ def test_ordinary_forecasts_cannot_hide_missing_periods_in_metric_labels(metric)
         ("Target price (12-mth)", "Target price (12-mth) EUR"),
         ("12-month target price", "Target price (12-mth) EUR"),
         ("Price target (Dec-27)", "Price target (Dec-27) EUR"),
+        ("TP", "TP EUR"),
+        ("Target", "Target EUR"),
+        ("Fair value", "Fair value EUR"),
+        ("Valuation midpoint", "Valuation range midpoint EUR"),
     ],
 )
 def test_target_horizon_spelling_does_not_prevent_publication(metric, label):

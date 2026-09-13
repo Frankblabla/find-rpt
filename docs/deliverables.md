@@ -1,6 +1,6 @@
 # Candidate brief: final submission review
 
-Reviewed against both pages of the supplied candidate brief on 12 September 2026.
+Reviewed against both pages of the supplied candidate brief; delivery evidence updated on 13 September 2026.
 The package is ready to submit as a working, auditable prototype. The four requested
 artifacts are present and the exercised workflows complete. This is not a claim of
 exhaustive extraction, hallucination-free output or accuracy across every broker.
@@ -18,36 +18,41 @@ exhaustive extraction, hallucination-free output or accuracy across every broker
 
 | Candidate brief item | Implementation and observed check | Remaining qualification |
 | --- | --- | --- |
-| Three parameters and report lookup | Fresh CPG/Jefferies and HFG/Stifel sessions found the correct PDFs by date, broker and cover ticker. Missing date/report, unverified identity and malformed ticker paths were exercised. | An unverified identifier requires explicit file confirmation; it is never silently treated as verified. |
-| 2.1 Title, one-line summary, identifying header | Both new HTML outputs contain ticker, broker, printed date, report title and a cited takeaway. | Filename date and printed date remain distinct. |
-| 2.2 What changed, years, percentages, consensus before/after | Revalidated 26 rows and their independent arithmetic across the two outputs. HFG retains all 18 Figure 3 metric-years plus the target; its printed -1bp survives equal rounded 3.5% levels. Missing consensus stays unavailable. | Extraction completeness remains model-dependent. CPG's 2Q26 comparison appears in prose but not the table. |
-| 2.3 Why, why now, plain English and management context | Source-checked the key causal passages and event/management attribution. Fixed the template to combine causes into one cited paragraph and context into a second; added a regression test. | Some HFG prose still uses finance shorthand such as SOTP and QoQ. Source validation cannot guarantee readability or causal interpretation. |
-| 2.4 Estimate picture from the single report | Tables and expandable comparison charts preserve available old/new and consensus pairs. No external research or cross-report aggregation was used. | Charts show selected comparisons; the table is the detailed view. |
-| 2.5 and section 3: analyst email, draft only | CPG has no broker estimate revisions and no draft. HFG automatically drafts seven metric/year questions to sourced analyst Clément Genelot. Saved HTML and final replies agree. Offline tests cover missing contact details with TODO placeholders. | HFG's limitation loosely calls all sales-growth changes upward, although the table correctly retains negative FY27/28 changes. No send endpoint or mail-service dependency exists. |
-| 2.6 Inline citations and highlighted original PDF | Claim and row links resolve to exact original lines. Browser inspection confirmed automatic scrolling to blue highlights on the original CPG guidance passage. | A valid location does not prove that every claim is fully supported. |
-| 2.7 Useful first-read information | Rating/target changes, source conflicts, missing information and important notes remain visible. Technical metadata and charts are collapsed. | The new briefs have 272/276 main-prose words; the editorial target does not reject necessary content. |
-| Page 2: easy further queries and follow-up | Two resumed CPG turns saved a cited guidance answer without changing HTML, then produced a compact view with all seven rows and identical research data. | Q&A and HTML changes are intentionally different operations; the user can ask for either. |
-| Section 4: runnable platform | Native Claude Code project skill, selectable model/effort and ordinary Python commands. The maintained web baseline supplies the shared viewer. | Claude must be installed/signed in; source links require a running local viewer. |
-| Section 5: corpus and distribution | Direct directory discovery finds the 101 PDFs actually supplied, compared with approximately 170 described in the brief. Only a README is committed under `corpus/`; no source PDFs or corpus manifest are shipped. | Three reserved May-28 PDFs remain unparsed; source checks used previously examined reports. |
+| Three parameters and report lookup | Ticker, date and broker select from PDFs directly in `corpus/`. Earlier CPG/HFG sessions exercised automatic lookup; the current regression completed all 25 selected tasks. Missing and ambiguous inputs have offline tests. | Fifteen regression inputs retain an explicitly confirmed file. This is not a universal automatic-lookup score. |
+| 2.1 Title, one-line summary, identifying header | Full outputs contain ticker, broker, printed date, title and a cited takeaway. Each regression takeaway received a limited source check. | Filename date and printed date remain distinct; source identity can remain explicitly ambiguous. |
+| 2.2 What changed, years, percentages, consensus before/after | Source-backed rows retain old/new values and available consensus. HFG retains 18 Figure 3 metric-years plus its target; reported bps survive equal rounded levels. CPG now includes the 2Q26 broker/consensus comparison in its table. | Some image-table rows and qualifiers remain missing. Full delivery does not mean exhaustive extraction. |
+| 2.3 Why, why now, plain English and management context | The template combines causes into one cited paragraph and context into a second. Causal and management claims refer to original lines. | Some finance shorthand remains; the Soitec EUR14m interpretation is too confident. Source validation cannot prove meaning. |
+| 2.4 Estimate picture from the single report | Tables and expandable charts preserve available comparisons. No external research or cross-report aggregation was used. | Charts show selected comparisons; the table is the detailed view. |
+| 2.5 and section 3: analyst email, draft only | Fresh CPG has no revisions and no automatic draft; HFG has a saved automatic draft. All 25 HTML pages display mutually exclusive draft/no-draft outcomes. Offline tests cover missing contacts with TODO placeholders. | Draft wording may over-escalate some revisions. No send endpoint or mail-service dependency exists. |
+| 2.6 Inline citations and highlighted original PDF | All 50 sampled source URLs across the 25 current briefs returned successfully. Earlier browser inspection confirmed scrolling to original PDF highlights. | A valid location does not prove full semantic support. |
+| 2.7 Useful first-read information | Rating/target changes, source conflicts, missing information and notes remain visible. Technical metadata and charts are collapsed. | Length is editorial guidance and does not block delivery of required content. |
+| Page 2: easy further queries and follow-up | Earlier resumed CPG turns saved a cited answer without changing HTML, then generated a compact view with the same research data. Offline tests exercise both operations. | The current 25-task batch tests initial delivery; it does not rerun every follow-up scenario. |
+| Section 4: runnable platform | Native Claude Code project skill, selectable model/effort and ordinary Python tools. The maintained web baseline supplies the shared viewer. | Claude must be installed/signed in; source links require the local viewer. |
+| Section 5: corpus and distribution | Direct discovery finds 101 supplied PDFs, compared with approximately 170 described in the brief. Only a README is committed under `corpus/`. | Three reserved May-28 PDFs remain unparsed; this regression uses previously examined reports. |
 
 ## Verification and deliberate scope
 
-Current offline checks: **142 Python and 11 JavaScript tests pass**, including in
-a clean submission export without PDFs, Claude authentication or old runtime files.
-Five lookup scenarios plus malformed input and documentation links were checked.
-All 10 selected artifact hashes were verified after removing the corpus manifest.
-Current local outputs retain one HTML per case;
-retired versions remain only where needed as private audit evidence.
+**154 Python and 11 JavaScript tests pass**, including in a clean 60-file export
+without source PDFs, Claude authentication or private runtime files. All 10 selected
+artifact hashes match their copy provenance. Recovery versions remain private
+records and are not additional public examples.
 
-Two fresh Opus/high report sessions and two resumed follow-up turns completed
-normally. Source checks covered the final claims, estimate rows, email outcome and
-original passages; findings are preserved rather than rewritten into passes.
-The client-reported list-cost estimate was **USD7.822414** for all four turns.
-See the [evaluation summary](../submission/evaluation.md) for exact outcomes,
-launch caveats and the separate historical batches.
+The current frozen-version regression reran the same 25 recorded report tasks:
+**25 full HTML files, 25 normal completions and 25 latest-link handoffs**, with zero
+budget stops. These attempts represent 24 distinct PDFs and 24 broker labels.
+The client-reported list-cost estimate is **USD61.4609245**; the highest report
+cost is USD5.12 against a requested USD15 cap. All 25 HTML routes, 25 data routes,
+50 sampled source links and 25 exclusive email states passed checks.
 
-The remaining issues are bounded extraction/readability limitations, not missing
-submission files or a broken exercised delivery path. No extra agent framework,
+Limited source reviews preserve unresolved interpretation and coverage findings,
+including Soitec's ambiguous amount and Endur's omitted dividend qualifier. Every
+session left a same-agent review note; neither that note nor structural validation
+establishes accuracy. The [broker table](../submission/evaluation.md) describes
+selection, first-attempt outcomes and review scope. Earlier two-report/follow-up
+evidence remains historical; it is not added to the current denominator.
+
+The submitted Swatch HTML is from the fresh regression. No extra agent framework,
 database, MCP service, independent model reviewer or email integration was added.
 The [data-object map](implementation.md#data-objects-containment-references-and-fields)
-explains the existing records and their relationships.
+explains the records and their relationships. The package has all four requested
+submission artifacts; remaining issues are disclosed content limitations.

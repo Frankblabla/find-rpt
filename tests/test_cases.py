@@ -31,6 +31,46 @@ def answer_file(case_id, base=1, text="Higher demand lifts EPS."):
     return path
 
 
+def test_source_ids_are_enough_for_publication_and_followup(published):
+    folder = cases.case_path(published)
+    candidate = folder / "work" / "without-quotes.json"
+    value = extracted_v3().model_dump()
+    value.pop("quotes")
+    cases.save(candidate, value)
+    result = cases.publish(published, candidate, 1)
+    _, saved, meta = cases.version(published)
+    assert saved["evidence"]["quotes"]
+    assert all(q["text"] == LINES[q["line_id"]] for q in saved["evidence"]["quotes"])
+    assert result["artifact_sha256"] == meta["files_sha256"]
+    candidate = answer_file(published, base=2)
+    value = cases.load(candidate)
+    value.pop("quotes")
+    cases.save(candidate, value)
+    reply = cases.save_answer(published, candidate)
+    assert cases.read_answer(published, reply["answer_id"])["quotes"] == [
+        dict(line_id="p1l4", text=LINES["p1l4"])
+    ]
+    delivery = cases.deliver(published)
+    assert delivery["artifact_status"] == "full"
+    assert delivery["email_draft"] == saved["brief"]["email_draft"]
+    assert delivery["artifact_sha256"] == meta["files_sha256"]
+
+
+@pytest.mark.parametrize("defect", ["unknown_line", "altered_quote"])
+def test_automatic_source_copy_never_repairs_false_evidence(published, defect):
+    candidate = answer_file(published)
+    value = cases.load(candidate)
+    if defect == "unknown_line":
+        value.pop("quotes")
+        value["claims"][0]["sources"] = ["p99l99"]
+    else:
+        value["quotes"][0]["text"] = "Invented cause."
+    cases.save(candidate, value)
+    with pytest.raises(ValueError):
+        cases.save_answer(published, candidate)
+    assert cases.deliver(published)["version"] == 1
+
+
 def test_full_workflow_preserves_prior_versions_and_reuses_data(published, monkeypatch):
     import subprocess
 

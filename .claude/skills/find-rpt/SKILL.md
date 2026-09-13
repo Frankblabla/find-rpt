@@ -1,7 +1,7 @@
 ---
 name: find-rpt
 description: Find a sell-side report by ticker, date and broker, create a cited HTML brief, and continue discussing or revising that report and its clarification draft.
-allowed-tools: Read Write Bash(uv run python -m find_rpt.tools *)
+allowed-tools: Read Write Edit Bash(uv run python -m find_rpt.tools *)
 ---
 
 Use this skill for this report workflow and its follow-ups. The current Claude
@@ -14,8 +14,9 @@ Run commands from the repository root as `uv run python -m find_rpt.tools ...`.
 Use `--help` for syntax if needed. Write candidate JSON only inside the returned
 case `work_directory`. Publish through tools; never edit case metadata, answers,
 HTML versions, source PDFs or code. Existing reviews/evaluations are not inputs.
-Use the native Write tool for candidate JSON, including corrections. Execute each
-Python tool command directly; do not wrap it in shell scripts or extra commands.
+Use native Write for candidate JSON and Edit for small corrections inside the case
+work directory. Do not rewrite a large JSON file just to change one label. Execute
+Python tool commands directly; no helper script is needed to repair a candidate.
 
 ## Start a report
 
@@ -31,7 +32,7 @@ First save a useful partial read so that later interruptions do not erase the
 delivery. Read `checkpoint_schema` and original page 1 with `read --case ID --page 1`
 (or the requested company's relevant page in a multi-company note).
 Write `work_directory/checkpoint.json`: source-backed identity, title/printed date,
-a few useful cited claims, exact quote lines, and specific unfinished work in
+one or two useful cited claims and specific unfinished work in
 `pending`. Use `checkpoint --case ID --file PATH --base-version 0`. This saves a
 clearly labelled partial HTML, not a completed brief. Run
 `uv run python -m find_rpt.tools serve` directly, show the partial link promptly,
@@ -40,12 +41,19 @@ Source/identity checks still apply; a failure to identify the report is not an
 invitation to manufacture a partial result.
 
 Then read the report text, extraction schema and extraction instructions. Produce
-ExtractionV3 evidence in `work_directory/extraction.json`, with complete exact
-source lines. The extraction reference applies to this full brief step, not every
+ExtractionV3 evidence in `work_directory/extraction.json`. Cite original line IDs
+in each source field; omit `quotes` to let Python copy the exact original lines.
+This applies to checkpoint, full extraction and answer inputs. If quotes are
+supplied, their text must still match the source. Never invent a line ID.
+Use `source_pdf_path` to inspect original PDF pages when table layout or missing
+text needs checking; disclose any image-only content that cannot be represented
+by the source-line tools. The extraction reference applies to this full brief step, not every
 subsequent question. Publish with `publish --case ID --file PATH --base-version N`,
 using the current version from context (normally 1 after the checkpoint). The
-partial version remains available. After saving, do the source-backed review
-below and return the full HTML link with its review scope. Never report completion
+partial version remains available. Show the full HTML link as soon as publication
+succeeds. Then do one source-backed review below, call `deliver --case ID`, and
+finish with its latest full link, saved email outcome and unresolved limitations.
+A valid saved brief does not need a style-polishing loop before handoff. Never report completion
 or invent an artifact link before the corresponding publication succeeds.
 
 ## Continue naturally
@@ -68,19 +76,18 @@ because it was modified most recently.
 - **Add an explanation to the brief:** first save a source-backed answer for the
   current version; call `amend --case ID --base-version N --answer ANSWER_ID`.
   Claims become required material and pass the full brief validation. Keep each
-  clause at most 45 words. If replacement or a larger revision is necessary,
+  clause concise without dropping necessary context. If a larger revision is necessary,
   read the current evidence JSON, edit a working copy and use `publish` with N.
 - **Prepare or revise a clarification draft:** save the requested questions in
   the answer format with relevant source lines, then use `draft --case ID
   --base-version N --answer ANSWER_ID`. The tool supplies sourced analyst details
   or TODOs and a fixed sender. It never sends. Return the new HTML and draft text.
 
-Short answer input (use the current base version and complete exact quotations):
+Short answer input (use the current base version and original source line IDs):
 
 ```json
 {"question":"The user's actual question", "base_version":1,
- "claims":[{"text":"A concise supported answer.","kind":"broker","sources":["p1l2"]}],
- "quotes":[{"line_id":"p1l2","text":"The complete exact original line."}]}
+ "claims":[{"text":"A concise supported answer.","kind":"broker","sources":["p1l2"]}]}
 ```
 
 Use `not_reported` with no invented facts when the report cannot answer. Cite the
@@ -97,11 +104,14 @@ prose can exceed 220 words without rejection or a length-only retry. Read the to
 `changes` (or context's `last_change`) and disclose removed prose; do not claim
 that everything else is unchanged unless the saved versions establish it.
 
-Tool failures are recorded. A validation error permits one focused correction to
-the working JSON and another attempt. Preserve the meaning of the source during
+Tool failures are recorded. Correct validation failures with focused edits to the
+working JSON; allow up to three repair attempts when each addresses the returned
+error. Do not stop after the first fix exposes a separate repairable issue. Preserve the meaning of the source during
 repair: use `reported_revision_bps` for a printed basis-point adjustment even when
 rounded old/new levels are equal; never call a real adjustment "not a revision"
-just to pass validation. Disclose a remaining failure and use the returned
+just to pass validation. If a field cannot be supported, preserve its sourced information in a required
+fact or note and disclose the structured omission; never fabricate values or drop
+a material issue just to pass. Disclose a remaining failure and use the returned
 `delivery` link, or `deliver --case ID`, to hand off the last valid artifact with
 its partial/full status. `deliver` is also available after interruption or resume
 and invokes no model. A partial brief can be queried using `answer`; finish the
@@ -113,7 +123,9 @@ cost or claim that valid citations prove semantic accuracy.
 Before delivering a new brief, factual answer, content edit or draft, read the
 actual saved result/answer and use `read` to inspect its relevant original lines.
 Do one focused review of the final output, including the claims you will repeat
-in chat. Existing schema/quote validation is necessary but does not check meaning.
+in chat. Prioritize revision direction (including negative growth), units, every
+material comparison, applicable causes and the actual saved draft. Do not turn
+optional wording improvements into repeated whole-report rewrites. Existing schema/quote validation is necessary but does not check meaning.
 
 - Check numbers with their metric, period, unit and column labels; preserve missing
   values, actual/forecast distinctions and qualifiers such as "above" or "about".
@@ -130,13 +142,12 @@ in chat. Existing schema/quote validation is necessary but does not check meanin
 
 Write a short `review-version-N.md` or `review-answer-N.md` in `work_directory`;
 if one exists, choose a new filename and retain it. Record target ID, reviewer as
-"same-agent self-review", source PDF hash, artifact hash (from that version's
-`version.json` or context's `answer_hashes`), checked fields/rows, findings with
+"same-agent self-review", source PDF hash, artifact hash (from `deliver` or context's `answer_hashes`), checked fields/rows, findings with
 original line references, and unchecked or unresolved items. Describe observations
 and source evidence, not hidden reasoning. Use "No unsupported claims found in
 the checked scope" only when warranted; never claim "hallucination-free".
 
-If an error is clear, make at most one focused correction through existing tools
+If an error is clear, make a focused correction through existing tools
 and recheck the corrected parts, recording a new note for the new target. Retain
 the earlier artifact and finding. If issues remain or no review was possible,
 say so alongside the output; do not describe it as checked or silently guess.

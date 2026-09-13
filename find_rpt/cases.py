@@ -17,6 +17,7 @@ from find_rpt.evidence import (
     Fact,
     Quote,
     comparison_provenance,
+    complete_quotes,
     facts,
     main_word_count,
     normalized,
@@ -28,16 +29,16 @@ from find_rpt.schema import StrictModel, Draft, comparisons
 
 
 class AnswerClaim(StrictModel):
-    text: str = Field(min_length=1, max_length=800)
+    text: str = Field(min_length=1)
     kind: Literal["broker", "not_reported"] = "broker"
     sources: list[str]
 
 
 class Answer(StrictModel):
-    question: str = Field(min_length=1, max_length=3000)
+    question: str = Field(min_length=1)
     base_version: int = Field(ge=1)
-    claims: list[AnswerClaim] = Field(min_length=1, max_length=6)
-    quotes: list[Quote] = Field(max_length=80)
+    claims: list[AnswerClaim] = Field(min_length=1)
+    quotes: list[Quote] = Field(default_factory=list)
 
 
 class Checkpoint(StrictModel):
@@ -48,7 +49,7 @@ class Checkpoint(StrictModel):
     subject_match: Literal["confirmed", "ambiguous", "mismatch"]
     identity: AnswerClaim
     claims: list[AnswerClaim] = Field(min_length=1)
-    quotes: list[Quote]
+    quotes: list[Quote] = Field(default_factory=list)
     pending: list[str] = Field(min_length=1)
 
 
@@ -207,6 +208,7 @@ def context(case_id):
         directory=str(folder),
         request_path=str(folder / "request.json"),
         report_path=str(folder / "report.txt"),
+        source_pdf_path=str(reports.CORPUS / reports.report(state["report_id"])[0]["file"]),
         work_directory=str(folder / "work"),
         extraction_schema=str(folder / "extraction-schema.json"),
         answer_schema=str(folder / "answer-schema.json"),
@@ -345,6 +347,7 @@ def check_identity(case_id, subject_match):
 def check_claims(case_id, claims, quotes):
     """Shared source checks for short answers and partial first reads."""
     lines = {line["id"]: line["text"] for line in original_lines(case_id)}
+    complete_quotes(quotes, [ref for claim in claims for ref in claim.sources], lines)
     by_id = {q.line_id: q.text for q in quotes}
     if len(by_id) != len(quotes):
         raise ValueError("Duplicate quote ID.")
@@ -422,6 +425,11 @@ def write_version(folder, state, result, reason):
         case_id=state["id"],
         version=number,
         html_path=str(path / "brief.html"),
+        source_pdf_sha256=state["report_sha256"],
+        artifact_sha256=meta["files_sha256"],
+        email_draft=result["brief"].get("email_draft"),
+        revisions_present=result["brief"].get("revisions_present"),
+        rationale=result["brief"].get("rationale"),
         html_url=meta["url"],
         result_path=str(path / "result.json"),
         main_words=result["main_word_count"],
@@ -507,6 +515,11 @@ def deliver(case_id):
         artifact_status=result.get("artifact_status", "full"),
         html_url=meta["url"],
         html_path=str(path / "brief.html"),
+        source_pdf_sha256=state["report_sha256"],
+        artifact_sha256=meta["files_sha256"],
+        email_draft=result["brief"].get("email_draft"),
+        revisions_present=result["brief"].get("revisions_present"),
+        rationale=result["brief"].get("rationale"),
         pending=result["brief"].get("limitations", [])
         if result.get("artifact_status") == "partial"
         else [],

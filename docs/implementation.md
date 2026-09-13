@@ -25,7 +25,7 @@ flowchart LR
 **There is an agent: Claude running inside Claude Code.** The model chooses an
 action, Claude Code executes its tool call, and the returned data or error informs
 the next action. The skill is text that this agent reads, not an executable actor
-or a replacement for the agent. Claude also uses native Read/Write to inspect
+or a replacement for the agent. Claude also uses native Read/Write/Edit to inspect
 returned file paths and create candidate JSON. Python commands do not call Claude.
 
 For example, "explain the second change" leads the agent to read case context,
@@ -69,7 +69,7 @@ be overengineered or overfit; avoiding object-oriented patterns is not sufficien
 | Case files and version directories | Resume, source identity and comparison of revisions | Deliberately local; no database, multi-user workflow or distributed locking |
 | Agent instructions plus deterministic tools | Reuse an existing conversational runtime while checking operations in code | Skill adherence is model behavior; the interactive host retains general file tools |
 | One source-backed self-review before handoff | Address semantic mistakes missed by structural validation | Same-agent errors can be correlated; it is not an independent verifier |
-| Approximate 220-word target; 45-word fact cap | Prefer concise optional prose while retaining every required fact | 220 is now advisory in native and baseline composition; overflow does not reject publication or require a model retry. The separate per-fact cap remains a constraint to reassess. |
+| Advisory prose length and open item counts | Preserve material facts without length-driven failures or retries | Concision is a review concern; long facts, answers or estimate tables do not block publication. |
 | No fixed item-count cap on material evidence | A sourced follow-up can add facts without an unrelated count failure; composition controls final prose length | Required facts may exceed the target; optional facts can stay in evidence without appearing in the brief |
 | Conservative cover matching, including a narrow GY/GR alias | Avoid silently selecting another issuer's report | Small observed coverage does not justify a universal ticker resolver |
 
@@ -92,10 +92,11 @@ force a source into a familiar prior/new pattern when the report does not suppor
 Prompt changes after a failure are development improvements, not evidence of
 generalization. Evaluate on untouched documents only under a new bounded test plan.
 
-There is no fixed count cap on material facts. Evidence validity and optional
-prose length are separate concerns; required facts survive composition. The
-45-word clause cap and some bounded lists remain. Target labels are not universal:
-TP/Target-only labels and valuation midpoints still have known gaps.
+Evidence validity and optional prose length are separate concerns. Fixed fact,
+answer, quote and estimate-count caps have been removed; required facts survive
+composition. Sourced TP/Target, fair-value and valuation labels may be non-fiscal.
+Fiscal forecasts still need period evidence. Horizons, currencies and security
+qualifiers remain checked; unsupported values are never manufactured to publish.
 
 Reported basis-point revisions remain separate from rounded old/new levels.
 Optional fields default away for older inputs. Pydantic validates JSON boundaries;
@@ -152,7 +153,7 @@ Arrays may be empty where the contract permits missing evidence.
 | --- | --- | --- |
 | `Extraction` | Legacy evidence root; base definition reused by v3 | `subject_match` (confirmed/ambiguous/mismatch), `title`, `report_date`; single `Fact` fields `identity`, `takeaway`, `event`, `estimate_picture`; `Fact[]` fields `changes`, `drivers`, `material`, `conflicts`, `answer`; `quotes: Quote[]`, `estimates: EvidenceEstimate[]`, `management: Management`, `analyst: Analyst`, `limitations: string[]` |
 | `ExtractionV3` | Current full-brief input | All inherited fields, plus `schema_version: 3`; **replaces** `estimate_picture: Fact` with `estimate_picture: ComparisonPicture`. It does not contain an `Extraction` object. |
-| `Quote` | `Extraction.quotes[]`, `Answer.quotes[]` or `Checkpoint.quotes[]` | `line_id` identifies a line in the selected PDF; `text` holds that complete original line. Validation checks normalized whitespace and exact text. |
+| `Quote` | `Extraction.quotes[]`, `Answer.quotes[]` or `Checkpoint.quotes[]` | `line_id` identifies a line in the selected PDF; `text` holds that complete original line. Inputs may omit quotes: tools copy referenced lines from the pinned source. Supplied quotations still undergo exact-text checks. |
 | `Fact` | Prose sections or comparison scenario | `id` identifies this fact; `text` is its concise claim; `kind` is broker/not_reported; `sources: string[]` identifies supporting quote lines; `required` controls retention during composition. |
 | `EvidenceEstimate` | `Extraction.estimates[]`; one metric/period/unit row | `id`, `metric`, `fiscal_year`, `units`; `old`, `new`, `consensus_before`, `consensus_after`, `reported_revision_pct`, `reported_revision_bps` are `float?`; `support: Support`; `note`, `note_sources: string[]`; `reason` is stated/not_stated/not_a_revision; `reason_fact_ids: string[]` links stated causes to sourced facts. |
 | `Support` | Exactly one per `EvidenceEstimate` | Nine `string[]` fields: `metric`, `fiscal_year`, `units`, `old`, `new`, `consensus_before`, `consensus_after`, `reported_revision_pct`, `reported_revision_bps`. Each contains the **quote line IDs for that particular estimate field**, not the field value or copied Quote objects. |
@@ -168,6 +169,12 @@ period and currency might be supported by different header lines.
 `r1.reason_fact_ids = ["f3"]` instead points to a prose fact, whose own `sources`
 must lead back to original quotes. `p2l10`, `r1` and `f3` belong to different ID
 namespaces. These are illustrative IDs, not evidence from an actual report.
+
+The input quotes array is optional for full extractions, checkpoints and answers.
+`complete_quotes` copies missing referenced lines from the selected source packet
+before validation; it never overwrites a supplied quote or invents a line. Saved
+evidence still includes full original quotations. This removes transcription work
+from the model without weakening source identity or hash checks.
 
 This extra support record buys field-level traceability: a citation to a number
 alone may miss its year or column label. Its cost is verbose model-authored JSON
@@ -239,6 +246,13 @@ amendments or a draft; rendering can create another partial view. No unsupported
 row is silently dropped to manufacture a full brief, and no rejected candidate is
 automatically promoted after a budget stop. Native client status, artifact status,
 review scope and research correctness remain separate evaluation dimensions.
+
+The native evaluation runner (`evals/native.py`) defaults to USD15 per report,
+30 minutes, and no separate turn cap. The old USD2.50/3 caps were evaluation
+settings, not an intrinsic limit of the interactive skill. Each attempt has a
+fresh session, closed stdin, native Edit access and a frozen product snapshot.
+There are no automatic batch retries. Full HTML, normal completion and a final
+reply containing the latest link are recorded separately.
 
 See the [evaluation summary](../submission/evaluation.md) for actual failures,
 budget stops and source-review findings. Current tool checks do not establish
@@ -327,11 +341,12 @@ causal statements and source conflicts. It also compares version changes so the
 final reply does not claim removed prose is unchanged.
 
 The native skill now requires one focused review before handing off factual
-content, using existing Read/Write and `read`/`context` commands. A short Markdown
+content, using existing Read/Write/Edit and `read`/`context` commands. A short Markdown
 note in the case's working directory identifies the reviewed version or answer,
 its saved hash, checked scope, source references, findings and unresolved items.
-If a concrete error is found, make at most one focused correction through existing
-tools and recheck the corrected portions. Preserve the original output and review
+Correct concrete errors with local edits and recheck the corrected portions.
+Validation allows up to three focused repair attempts; each must address the
+returned error. Style polishing is not a reason to withhold a valid full output. Preserve the original output and review
 note; larger unresolved issues remain explicitly flagged for the user.
 
 For a presentation-only change, inspect the actual displayed view, retained data
@@ -340,7 +355,9 @@ than performed again. Missing prior review means unreviewed, not a new pass.
 
 **Enforcement limit:** this is a skill procedure, not a Python publication gate.
 `publish` saves a local version before agent review; it does not upload anything.
-The agent reviews that saved output before presenting it as ready. Direct tool
+The agent shows the saved full link promptly, performs its review, then uses
+`deliver` for the final handoff. That command returns saved draft details and
+source/artifact hashes, so the reply and review need not reconstruct them. Direct tool
 calls and the old batch/web entry can still produce an unreviewed result. Review
 notes are ordinary working files and are not immutable, tool-attested certificates.
 No "hallucination-free" status or numerical confidence score is claimed.

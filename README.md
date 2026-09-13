@@ -92,7 +92,10 @@ available on expansion. Default examples show all saved estimate rows.
 Q&A saves a short cited answer and leaves the HTML unchanged. Presentation changes
 create a new HTML version from the same validated data. Content changes are
 validated again. New updates retain recovery versions; explicitly retired local HTML links redirect to the latest result. Claude consumes model usage for
-reasoning and tool calls; Python tools themselves consume no model tokens.
+reasoning and tool calls; Python tools themselves consume no model tokens. Inputs cite source line IDs;
+Python copies the corresponding original quotations into saved evidence. Native
+Edit supports small corrections, and prose length or item counts do not block
+publication. Source identity, supplied quote text and saved hashes remain checked.
 
 Before handoff, the skill now asks the same agent to reread the saved output and
 relevant original passages, then leave a short review note with scope and findings.
@@ -174,20 +177,28 @@ uv run pytest -q
 node --test tests/*.test.mjs
 ```
 
-Current checks: **142 Python tests and 11 JavaScript tests pass**. These synthetic
+Current checks: **154 Python tests and 11 JavaScript tests pass**. These synthetic
 checks verify application behavior; source correctness still requires review.
 
-The [broker results table](submission/evaluation.md) summarizes 25 recorded native
-report attempts: 24 full HTML deliveries and 19 full deliveries with normal session
-completion. Batch versions, failures and source-review findings remain explicit.
-These are historical development checks, not a uniform current-version accuracy
-benchmark. The [real native conversation](submission/examples/native-conversation.md)
-also demonstrates source Q&A, HTML changes and resume with reviewer corrections.
+The [broker results table](submission/evaluation.md) now reports a same-version
+rerun of the 25 recorded tasks: **25 full HTML deliveries, 25 normal completions,
+and 25 final replies with the latest saved link**, compared with 24 full deliveries
+and 19 completed workflows in the earlier records. These are reused development
+reports, not an unseen accuracy benchmark. Scoped source checks still find
+interpretation and coverage issues, which remain visible in the table.
+
+The current [native evaluation runner](evals/native.py) defaults to Opus/high,
+USD15 per report and 30 minutes, without a separate turn cap. This is an evaluation
+budget, not a forced limit on interactive conversations. See the
+[test guide](tests/README.md#real-model-evaluations-are-separate) for explicit paid-run
+instructions. No automatic batch retries are used. The
+[real native conversation](submission/examples/native-conversation.md) separately
+illustrates source Q&A, HTML changes and resume with reviewer corrections.
 
 Exact citations establish source locations and quotations; they cannot guarantee
 interpretation or completeness. Original run evidence stays private under
-`local/evidence/`. A future evaluation is limited to 30 distinct companies and
-has not been started.
+`local/evidence/`. A future unseen evaluation remains limited to 30 distinct
+companies; the current regression reuses the existing reports.
 
 ## Earlier baseline
 

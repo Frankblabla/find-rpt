@@ -63,7 +63,7 @@ class Person(StrictModel):
 
 
 class Management(StrictModel):
-    named_executives: list[Person] = Field(max_length=6)
+    named_executives: list[Person]
     conversation_reported: bool
     conversation_sources: list[str]
 
@@ -80,31 +80,31 @@ class Extraction(StrictModel):
     title: str
     report_date: str
     identity: Fact
-    quotes: list[Quote] = Field(max_length=350)
+    quotes: list[Quote] = Field(default_factory=list)
     takeaway: Fact
-    changes: list[Fact] = Field(max_length=8)
-    drivers: list[Fact] = Field(max_length=2)
+    changes: list[Fact]
+    drivers: list[Fact]
     event: Fact
     estimate_picture: Fact
     material: list[Fact]
-    conflicts: list[Fact] = Field(max_length=4)
-    answer: list[Fact] = Field(max_length=4)
-    estimates: list[EvidenceEstimate] = Field(max_length=80)
+    conflicts: list[Fact]
+    answer: list[Fact]
+    estimates: list[EvidenceEstimate]
     management: Management
     analyst: Analyst
-    limitations: list[str] = Field(max_length=8)
+    limitations: list[str]
 
 
 class ComparisonGroup(StrictModel):
     metric: str
     basis: Literal["current", "prior"]
-    fiscal_years: list[str] = Field(min_length=1, max_length=12)
-    row_ids: list[str] = Field(min_length=1, max_length=12)
+    fiscal_years: list[str] = Field(min_length=1)
+    row_ids: list[str] = Field(min_length=1)
     header_sources: list[str] = Field(min_length=1)
 
 
 class ComparisonPicture(StrictModel):
-    groups: list[ComparisonGroup] = Field(max_length=30)
+    groups: list[ComparisonGroup]
     scenario: Fact | None
 
 
@@ -290,8 +290,26 @@ def row_sources(row):
     )
 
 
+def complete_quotes(quotes, refs, lines):
+    """Copy missing referenced lines from the source; never overwrite supplied quotes."""
+    known = {q.line_id for q in quotes}
+    for ref in dict.fromkeys(refs):
+        if ref not in lines:
+            raise ValueError(f"Unknown original source line {ref}.")
+        if ref not in known:
+            quotes.append(Quote(line_id=ref, text=lines[ref]))
+            known.add(ref)
+
+
 def validate_extraction(e, lines):
     """Check exact quotations, field provenance and structural completeness, not entailment."""
+    refs = [ref for f in facts(e) for ref in f.sources]
+    refs += [ref for r in e.estimates for ref in row_sources(r)]
+    refs += [ref for p in e.management.named_executives for ref in p.sources]
+    refs += e.management.conversation_sources + e.analyst.name_sources + e.analyst.address_sources
+    if isinstance(e, ExtractionV3):
+        refs += [ref for g in e.estimate_picture.groups for ref in g.header_sources]
+    complete_quotes(e.quotes, refs, lines)
     quotes = {q.line_id: q.text for q in e.quotes}
     if len(quotes) != len(e.quotes):
         raise ValueError("Duplicate evidence quote ID.")
@@ -312,10 +330,8 @@ def validate_extraction(e, lines):
     for f in items:
         if not re.fullmatch(r"f[1-9][0-9]*", f.id):
             raise ValueError("Fact IDs must use f1, f2, ...")
-        if not f.text.strip() or word_count(f.text) > 45:
-            raise ValueError(
-                f"Fact {f.id} must contain 1–45 words; no truncation applied."
-            )
+        if not f.text.strip():
+            raise ValueError(f"Fact {f.id} must contain nonempty text.")
         refs_ok(f.sources, f.kind != "not_reported")
     refs_ok(e.identity.sources)
     if not e.title.strip() or not e.report_date.strip():
@@ -340,10 +356,12 @@ def validate_extraction(e, lines):
             raise ValueError("Estimate IDs must use r1, r2, ...")
         non_fiscal = normalized(r.fiscal_year).casefold() in {"n/a", "not applicable"}
         if non_fiscal:
-            labels = {"target price", "price target", "price objective"}
+            labels = {"target price", "price target", "price objective", "target", "TP", "PO",
+                      "fair value", "valuation", "valuation range", "valuation midpoint"}
             target = re.fullmatch(
                 r"(?:(ADR) )?(?:(\d{1,2}(?:m|mths?|[- ]months?)) )?"
-                r"(target price|price target|price objective)(?: \(([^()]+)\))?",
+                r"(target price|price target|price objective|target|TP|PO|fair value|"
+                r"valuation(?: range)?(?: midpoint)?)(?: \(([^()]+)\))?",
                 normalized(r.metric),
                 re.IGNORECASE,
             )
@@ -354,7 +372,7 @@ def validate_extraction(e, lines):
                 " ".join(quotes[ref] for ref in r.support.metric)
             ).casefold()
             if not any(
-                re.search(r"\b" + re.escape(label) + r"\b", label_text)
+                re.search(r"\b" + re.escape(label) + r"\b", label_text, re.IGNORECASE)
                 for label in labels
             ):
                 raise ValueError(
@@ -459,8 +477,6 @@ def validate_extraction(e, lines):
         raise ValueError("Analyst address evidence must establish the named recipient.")
     if a.address and not re.fullmatch(r"[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+", a.address):
         raise ValueError("Invalid sourced analyst email address.")
-    if word_count(" ".join(f.text for f in e.answer)) > 120:
-        raise ValueError("Follow-up answer exceeds 120 words; no truncation applied.")
     return e
 
 
@@ -649,12 +665,6 @@ def composition_packet(e, request):
         picture_claim(e).sources
     )
     packet["quotes"] = [q.model_dump() for q in e.quotes if q.line_id in used]
-    import json
-
-    if len(json.dumps(packet, ensure_ascii=False).encode()) > 48000:
-        raise ValueError(
-            "Composition evidence packet exceeds 48 KB; no silent evidence truncation."
-        )
     return packet
 
 

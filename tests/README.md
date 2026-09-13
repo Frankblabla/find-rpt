@@ -8,7 +8,7 @@ uv run pytest -q
 node --test tests/*.test.mjs
 ```
 
-The suite has **142 Python cases and 11 JavaScript cases**. It uses temporary
+The suite has **154 Python cases and 11 JavaScript cases**. It uses temporary
 synthetic PDFs and fake model processes. It does not require the private corpus,
 Claude authentication, a running server, network access or paid model calls.
 Python verifies behavior through direct functions, the CLI boundary and Flask's
@@ -25,6 +25,7 @@ needed. PyMuPDF currently emits five upstream deprecation warnings.
 | `test_selection.py` | Ticker identity, manual confirmation, provenance, selected-source access and CLI selection |
 | `test_baseline.py` | Direct corpus discovery, file changes, earlier web/batch interface, lookup, source rendering, missing values and model-process configuration |
 | `test_full_flow.py` | Synthetic API workflows, draft recipients, follow-up lineage and original-PDF links |
+| `test_native_evaluation.py` | Native runner counts saved full artifacts, normal client completion and the final handoff separately; verifies closed stdin and native Edit access |
 | `test_heldout.py` | Evaluation-runner safeguards using synthetic files: frozen selection, no repeats and failure recording |
 | `app.test.mjs` | Browser state: stale requests, selection confirmation, identity blocking and explicit no-draft reasons |
 | `estimates.test.mjs` | Estimate grouping and revision display, including zero, rounded levels and basis points |
@@ -49,3 +50,29 @@ Do not rerun a paid batch as a submission check. The committed-format
 [submission summary](../submission/evaluation.md) records observed outcomes,
 costs and limitations. Passing synthetic tests proves the specified application
 behavior, not financial accuracy or all-corpus coverage.
+
+`evals/native.py` is the current native evaluation entry point. The other scripts
+retain earlier baseline experiments and require their private frozen inputs.
+The current workflow can be evaluated with a private JSON selection:
+
+```json
+[{"ticker":"CPG LN","date":"2026-05-11","broker":"Jefferies"}]
+```
+
+Save it under `local/`, then explicitly start a paid run:
+
+```bash
+uv run python evals/native.py local/selection.json --output local/evaluation --budget 15 --workers 3
+```
+
+The output directory must be new and remain inside ignored `local/`. Model/effort
+and timeout are selectable; defaults are Opus/high and 30 minutes per report,
+without a separate turn cap. With N reports the default aggregate list-cost cap
+is N × USD15; a final request can slightly exceed a client cap. This is not a
+spending target or a subscription charge estimate. The runner
+freezes the inputs and product files, saves every first attempt and raw event log,
+and never silently retries a failed session. `summary.json` distinguishes full
+HTML, normal completion and a final reply containing the saved latest link.
+It does not award a semantic accuracy pass. Optional `report_id` and
+`confirm_selection: true` retain an explicitly selected source; report that scope
+separately from automatic lookup. Do not include expected report answers in inputs.

@@ -1,7 +1,7 @@
 """Small output contract; numeric differences and source validity are checked locally."""
 
 from typing import Literal
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
 
 class StrictModel(BaseModel):
@@ -43,7 +43,7 @@ class Brief(StrictModel):
     report_date: str
     takeaway: Claim
     changes: list[Claim]
-    drivers: list[Claim] = Field(max_length=2)
+    drivers: list[Claim]
     context: Claim
     estimates: list[Estimate]
     estimate_picture: Claim
