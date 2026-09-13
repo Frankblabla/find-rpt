@@ -11,9 +11,9 @@ working baseline and supplies the local PDF highlight viewer.
 
 ## Start here
 
-Requires Python 3.11+, `uv`, and Claude Code installed and signed in. For a fresh
-checkout, first follow [Source files and artifacts](#source-files-and-artifacts)
-to place the supplied PDFs and restore the manifest. Then run from this repository:
+Requires Python 3.11+, `uv`, and Claude Code installed and signed in. Place the
+supplied PDFs in [`corpus/`](corpus/README.md), keeping their original filenames.
+Then run from this repository:
 
 ```bash
 uv sync --locked
@@ -79,25 +79,16 @@ not claim a completed review just because HTML exists.
 
 ## Source files and artifacts
 
-This workspace already has the private corpus and manifest. For a fresh checkout,
-put the supplied PDFs directly under [`corpus/`](corpus/README.md) with their original names,
-then restore the bundled metadata-only manifest:
+Reports are discovered directly from `corpus/` using `YYYYMMDD_Broker_hash.pdf`
+filenames. Adding or removing a PDF takes effect on the next lookup; there is no
+manifest, import command or index to maintain. Files without this naming pattern
+or a valid date are ignored. Only `corpus/README.md` is tracked in Git; PDFs and
+runtime data stay private.
 
-```bash
-mkdir -p local
-cp -n submission/corpus-manifest.json local/split.json
-```
-
-The copy preserves an existing local manifest. PDFs and runtime data remain
-excluded from Git; only `corpus/README.md` is tracked inside the corpus directory.
-The bundled split retains historical labels and isolation
-wording; current ordinary application access includes all 101 entries. Only for
-a genuinely different corpus, create a new manifest before inspecting reports
-with `uv run python evals/reserve.py`; never replace this corpus's established split.
-
-All 101 manifest reports are accessible. Date/broker filtering and conservative
-cover matching locate candidates. Unverified ticker identities require original
-PDF review and explicit file confirmation. This is not full-corpus accuracy proof.
+Date/broker filtering and conservative cover matching locate candidates.
+Unverified ticker identities require original PDF review and explicit file
+confirmation. File contents determine report IDs, so saved evidence cannot
+silently switch to an edited PDF. Discovery is not full-corpus accuracy proof.
 
 The cleaned workspace retains one current HTML per case. Required original audit evidence is kept separately under `local/evidence/`. Artifacts live in `local/cases/CASE_ID/`: `case.json` and `request.json` record
 identity; `answers/` stores Q&A; `versions/0001/` contains `brief.html`, evidence,
@@ -141,7 +132,7 @@ uv run pytest -q
 node --test tests/*.test.mjs
 ```
 
-Current checks: **139 Python tests and 11 JavaScript tests pass**. A final targeted check also completed two fresh report sessions and two follow-ups; see the [submission review](docs/deliverables.md) for outcomes and remaining limitations. These include explicit email decisions and follow-up after historical-output cleanup. The six-turn
+Current checks: **142 Python tests and 11 JavaScript tests pass**. A final targeted check also completed two fresh report sessions and two follow-ups; see the [submission review](docs/deliverables.md) for outcomes and remaining limitations. These include explicit email decisions and follow-up after historical-output cleanup. The six-turn
 [real native exercise](submission/examples/native-conversation.md)
 produced four HTML versions and five answers, with two explicit review corrections.
 The earlier [ten-report evaluation](submission/evaluation.md) saved

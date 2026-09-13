@@ -104,10 +104,13 @@ def prepare(identities_path):
 
 
 @contextmanager
-def isolated_view(directory, config):
+def isolated_view(directory, config, row):
     original = (reports.LOCAL, reports.CORPUS, harness.RUNS, web.RUNS, web.worker.submit)
+    original_inventory = reports.inventory, web.inventory
     environment = {key: os.environ.get(key) for key in ["FIND_RPT_TIMEOUT", "FIND_RPT_CLAUDE"]}
     reports.LOCAL, reports.CORPUS = directory, CORPUS
+    # Evaluation owns its frozen selection; ordinary discovery has no split dependency.
+    reports.inventory = web.inventory = lambda: [dict(row, id=row["sha256"][:16])]
     harness.RUNS = web.RUNS = directory / "runs"
     web.worker.submit = lambda fn, *args: fn(*args)
     os.environ["FIND_RPT_TIMEOUT"] = str(config["timeout_seconds"])
@@ -117,6 +120,7 @@ def isolated_view(directory, config):
         yield web.app.test_client()
     finally:
         reports.LOCAL, reports.CORPUS, harness.RUNS, web.RUNS, web.worker.submit = original
+        reports.inventory, web.inventory = original_inventory
         reports._extract.cache_clear()
         for key, value in environment.items():
             if value is None:
@@ -179,9 +183,9 @@ def run_case(case, directory, frozen):
             # Only this process's inventory view changes; the original split stays acceptance.
             save(directory / "split.json", {
                 "evaluation_only": True, "original_split_sha256": sha(SPLIT),
-                "reports": [dict(row, original_split=row["split"], split="development")],
+                "reports": [dict(row, original_split=row["split"])],
             })
-            with isolated_view(directory, config) as client:
+            with isolated_view(directory, config, row) as client:
                 date = f"{row['date'][:4]}-{row['date'][4:6]}-{row['date'][6:]}"
                 summary.update(active_stage="lookup", lookup_attempted=True)
                 lookup = client.post("/api/lookup", json={"ticker": case["ticker"], "date": date, "broker": row["broker"]})

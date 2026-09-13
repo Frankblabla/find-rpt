@@ -30,12 +30,10 @@ so a repository checkout does not depend on an ignored local evidence index.
   exports. They demonstrate revisions, comparisons, source conflicts and a real
   attached follow-up; they are not tests of the latest native product.
 
-Source links open the local viewer on port 8765 and require the authorized corpus
-and manifest described in the root README. The standalone HTML and Markdown are
+Source links open the local viewer on port 8765 and require the authorized PDFs
+in `corpus/`, as described in the root README. The standalone HTML and Markdown are
 readable without the viewer; retired local HTML links redirect to current results; exact historical versions are
-kept only in the private evidence archive. Original PDFs are not included. The bundled [corpus manifest](corpus-manifest.json)
-contains filenames, hashes and historical split labels only. Its isolation wording
-is historical; the current application allows ordinary access to all 101 entries.
+kept only in the private evidence archive. Original PDFs are not included.
 
 [Evaluation summary](evaluation.md) records test counts, actual broker attempts,
 client costs and known limitations. Necessary private audits are consolidated in `local/evidence/` and are

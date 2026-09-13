@@ -8,7 +8,7 @@ uv run pytest -q
 node --test tests/*.test.mjs
 ```
 
-The suite has **139 Python cases and 11 JavaScript cases**. It uses temporary
+The suite has **142 Python cases and 11 JavaScript cases**. It uses temporary
 synthetic PDFs and fake model processes. It does not require the private corpus,
 Claude authentication, a running server, network access or paid model calls.
 Python verifies behavior through direct functions, the CLI boundary and Flask's
@@ -23,7 +23,7 @@ needed. PyMuPDF currently emits five upstream deprecation warnings.
 | `test_evidence.py` | Extraction/selection contracts, retained facts, source support, composition and baseline process failures |
 | `test_comparison_picture.py` | Fiscal periods, comparison grouping, target labels, reported bps, qualitative revisions and arithmetic boundaries |
 | `test_selection.py` | Ticker identity, manual confirmation, provenance, selected-source access and CLI selection |
-| `test_baseline.py` | Earlier web/batch interface, lookup, source rendering, missing values and model-process configuration |
+| `test_baseline.py` | Direct corpus discovery, file changes, earlier web/batch interface, lookup, source rendering, missing values and model-process configuration |
 | `test_full_flow.py` | Synthetic API workflows, draft recipients, follow-up lineage and original-PDF links |
 | `test_heldout.py` | Evaluation-runner safeguards using synthetic files: frozen selection, no repeats and failure recording |
 | `app.test.mjs` | Browser state: stale requests, selection confirmation, identity blocking and explicit no-draft reasons |

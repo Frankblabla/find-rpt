@@ -73,6 +73,17 @@ be overengineered or overfit; avoiding object-oriented patterns is not sufficien
 | No fixed item-count cap on material evidence | A sourced follow-up can add facts without an unrelated count failure; composition controls final prose length | Required facts may exceed the target; optional facts can stay in evidence without appearing in the brief |
 | Conservative cover matching, including a narrow GY/GR alias | Avoid silently selecting another issuer's report | Small observed coverage does not justify a universal ticker resolver |
 
+`reports.inventory()` discovers PDFs directly in `corpus/`: the filename supplies
+date and broker, and a SHA-256 content hash supplies the stable report ID. There
+is no persistent catalog, import step or runtime dependency on an evaluation split.
+Each lookup sees current files. With this small corpus, hashing the files on demand
+keeps discovery simple without a cache to invalidate. PDF text is parsed only for
+the relevant candidates or selected source. Saved cases pin the full source hash;
+replacing a PDF changes its ID and cannot silently retarget existing evidence.
+Historical split records remain private evaluation inputs. The optional held-out
+runner temporarily restricts its own inventory to the frozen selection and restores
+normal discovery afterwards.
+
 The overfitting risk is primarily in the output schema, lookup rules and prompts
 adapted after a handful of examples. The quote/arithmetic/version checks express
 general invariants; company-specific expected answers must stay out of them. Keep

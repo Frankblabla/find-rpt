@@ -51,9 +51,9 @@ def test_same_baseline_value_precedes_nearer_vertical_footnote():
 
 
 def test_inventory_is_metadata_only_and_selected_preflight_opens_only_selected(corpus, monkeypatch):
-    selected = corpus("20260511_Test_a.pdf", "TICKER: ABC LN", "acceptance")
-    corpus("20260511_Test_b.pdf", "TICKER: XYZ LN", "acceptance")
-    corpus("20260528_Test_c.pdf", "TICKER: DEF LN", "acceptance")
+    selected = corpus("20260511_Test_a.pdf", "TICKER: ABC LN")
+    corpus("20260511_Test_b.pdf", "TICKER: XYZ LN")
+    corpus("20260528_Test_c.pdf", "TICKER: DEF LN")
     original = reports.pymupdf.open
     opened = []
 
@@ -72,7 +72,7 @@ def test_inventory_is_metadata_only_and_selected_preflight_opens_only_selected(c
 
 
 def test_api_manual_confirmation_is_strict_and_spoofed_provenance_is_ignored(corpus, monkeypatch):
-    rid = corpus("20260511_Test_a.pdf", "Example Company\nRIC: ABC.L", "acceptance")
+    rid = corpus("20260511_Test_a.pdf", "Example Company\nRIC: ABC.L")
     dispatched = []
     monkeypatch.setattr(web.worker, "submit", lambda *args: dispatched.append(args))
     client = web.app.test_client()
@@ -88,7 +88,6 @@ def test_api_manual_confirmation_is_strict_and_spoofed_provenance_is_ignored(cor
     saved = json.loads((harness.run_directory(response.json["id"]) / "request.json").read_text())
     assert saved["selection"]["method"] == "user_confirmed"
     assert saved["selection"]["cover_sources"] == []
-    assert saved["selection"]["original_split"] == "acceptance"
     assert saved["selection"]["report_sha256"] == reports.report(rid)[0]["sha256"]
 
 
@@ -156,7 +155,7 @@ def test_offline_revalidation_cannot_compose_mismatch_or_rewrite_failed_source(c
 
 
 def test_cli_explicit_confirmation_uses_shared_preflight(corpus, monkeypatch, capsys):
-    rid = corpus("20260511_Test_a.pdf", "Example Company", "acceptance")
+    rid = corpus("20260511_Test_a.pdf", "Example Company")
     executed = []
     monkeypatch.setattr(harness, "execute", lambda run: executed.append(run) or {"status": "complete"})
     monkeypatch.setattr(harness, "read_run", lambda run: {"id": run})

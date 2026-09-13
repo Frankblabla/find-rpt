@@ -2,10 +2,15 @@
 
 ## Reproducible offline checks
 
-**139 Python tests and 11 JavaScript tests pass.** The [test guide](../tests/README.md)
+**142 Python tests and 11 JavaScript tests pass.** The [test guide](../tests/README.md)
 explains each file and the commands. Synthetic fixtures verify source/identity
 boundaries, arithmetic, drafts, follow-up lineage, artifact preservation and
 partial-to-full recovery. They do not prove model accuracy.
+
+Corpus setup was simplified on 13 September: place PDFs in `corpus/` and lookup
+discovers them directly. Offline checks cover discovery without a manifest,
+additions/removals and changed-source rejection. The 101 existing PDF identities
+and 16 saved briefs remain unchanged; no additional model evaluation was run.
 
 The hard 220-word publication limit has been removed from native and baseline
 composition. Required facts can exceed the editorial target. Preserved rejected
@@ -29,7 +34,7 @@ USD1.50 and USD1.00. There were no budget stops or automatic batch retries.
 | CPG source question | Normal completion; the answer preserved the lower-bound meaning of "above 11%" and did not change HTML. |
 | CPG compact view | Normal completion; all seven rows and identical evidence/brief/comparisons retained, with no re-extraction or draft. |
 | Structural/source checks | Both saved outputs revalidated; computed comparisons matched; original PDF highlights and exclusive email outcomes checked. |
-| Installation and offline tests | Clean submission export: locked install, 139 Python tests, 11 JavaScript tests and CLI help passed. |
+| Installation and offline tests | Clean submission export: locked install, 139 Python tests, 11 JavaScript tests and CLI help passed at that check. Current counts are listed above. |
 | Cost | Client-reported list-cost estimate USD7.822414 across four turns; this is not a subscription charge statement. |
 
 Scoped source review found remaining limitations: CPG's 2Q26 broker/consensus

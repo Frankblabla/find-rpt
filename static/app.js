@@ -314,7 +314,7 @@ $("search").onsubmit = async (event) => {
           `<div class="match"><div><strong>${escape(c.file)}</strong><p>${escape(c.evidence.map((e) => e.text).join(" · "))}${c.alias_used ? " · GY/GR alias applied" : ""}</p><a href="/source/${c.id}?refs=${c.evidence.map((e) => e.id).join(",")}" data-source="/source/${c.id}?refs=${c.evidence.map((e) => e.id).join(",")}">Inspect identity ↗</a></div><button data-report="${c.id}">Create brief</button></div>`,
       )
       .join("") + (r.review_candidates?.length ? '<h3>Other files to review — ticker unverified</h3>' + r.review_candidates.map(c =>
-        `<div class="match"><div><strong>${escape(c.file)}</strong><p>No supported cover match for ${escape(searchTicker)}. Original split: ${escape(c.split)}.</p><a href="/source/${c.id}" data-source="/source/${c.id}">Review original PDF ↗</a><label><input type="checkbox" id="confirm-${c.id}"> I reviewed this file and confirm it is the report I want analysed for ${escape(searchTicker)}.</label></div><button data-report="${c.id}" data-manual disabled>Analyse my confirmed selection</button></div>`
+        `<div class="match"><div><strong>${escape(c.file)}</strong><p>No supported cover match for ${escape(searchTicker)}.</p><a href="/source/${c.id}" data-source="/source/${c.id}">Review original PDF ↗</a><label><input type="checkbox" id="confirm-${c.id}"> I reviewed this file and confirm it is the report I want analysed for ${escape(searchTicker)}.</label></div><button data-report="${c.id}" data-manual disabled>Analyse my confirmed selection</button></div>`
       ).join("") : "");
     status(
       r.status === "no_match"
@@ -364,7 +364,9 @@ $("search").onsubmit = async (event) => {
       )
       .join("");
     $("coverage").textContent =
-      `${c.total} reports available · Original split: ${c.development} development, ${c.acceptance} acceptance · File dates can differ from printed release dates`;
+      c.total
+        ? `${c.total} reports available · File dates can differ from printed release dates`
+        : 'Place research PDFs in corpus/ using YYYYMMDD_Broker_hash.pdf filenames, then reload.';
     await refreshHistory();
   } catch (e) {
     status(e.message, true);

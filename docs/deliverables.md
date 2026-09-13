@@ -10,7 +10,7 @@ exhaustive extraction, hallucination-free output or accuracy across every broker
 | Candidate brief, section 6 | Included artifact | Check |
 | --- | --- | --- |
 | 1. Implementation, preferably GitHub; no research PDFs | `find_rpt/`, `.claude/skills/find-rpt/`, `app.py`, `templates/`, `static/` | Ready. The public package contains code and selected evidence; no source PDFs or private runtime. |
-| 2. Short README with enable/run/configuration steps | [README](../README.md), `.env.example` | Ready. A clean export installed with `uv sync --locked`, passed both test suites and exposed the CLI help. Corpus placement and manifest restoration are documented. |
+| 2. Short README with enable/run/configuration steps | [README](../README.md), `.env.example` | Ready. A clean export installed with `uv sync --locked`, passed both test suites and exposed the CLI help. Setup only requires placing PDFs in `corpus/`; discovery is automatic. |
 | 3. A few actual examples with full format and citations | [Selected examples](../submission/README.md#examples-and-their-scope): Swatch HTML, native conversation, Hexagon and Grenergy | Ready. Artifact hashes and source provenance verified. Source highlights require the supplied PDFs and local viewer. |
 | 4. AI transcripts or development agent logs | [English development excerpt](../submission/development/transcript.md), original visible events and recovery events with [provenance](../submission/provenance.json) | Ready. Genuine selected development events are included; product conversations are labelled separately. Chinese planning and private presentation materials are excluded. |
 
@@ -28,14 +28,15 @@ exhaustive extraction, hallucination-free output or accuracy across every broker
 | 2.7 Useful first-read information | Rating/target changes, source conflicts, missing information and important notes remain visible. Technical metadata and charts are collapsed. | The new briefs have 272/276 main-prose words; the editorial target does not reject necessary content. |
 | Page 2: easy further queries and follow-up | Two resumed CPG turns saved a cited guidance answer without changing HTML, then produced a compact view with all seven rows and identical research data. | Q&A and HTML changes are intentionally different operations; the user can ask for either. |
 | Section 4: runnable platform | Native Claude Code project skill, selectable model/effort and ordinary Python commands. The maintained web baseline supplies the shared viewer. | Claude must be installed/signed in; source links require a running local viewer. |
-| Section 5: corpus and distribution | The manifest covers the 101 PDFs actually supplied, compared with approximately 170 described in the brief. No original PDFs are committed. | Three reserved May-28 PDFs remain unopened; this check used previously examined reports. |
+| Section 5: corpus and distribution | Direct directory discovery finds the 101 PDFs actually supplied, compared with approximately 170 described in the brief. Only a README is committed under `corpus/`; no source PDFs or corpus manifest are shipped. | Three reserved May-28 PDFs remain unparsed; source checks used previously examined reports. |
 
 ## Verification and deliberate scope
 
-Current offline checks: **139 Python and 11 JavaScript tests pass**, including in
+Current offline checks: **142 Python and 11 JavaScript tests pass**, including in
 a clean submission export without PDFs, Claude authentication or old runtime files.
-Five lookup scenarios plus malformed input, 59 documentation links and 11 submitted
-artifact hashes were checked. Current local outputs retain one HTML per case;
+Five lookup scenarios plus malformed input and documentation links were checked.
+All 10 selected artifact hashes were verified after removing the corpus manifest.
+Current local outputs retain one HTML per case;
 retired versions remain only where needed as private audit evidence.
 
 Two fresh Opus/high report sessions and two resumed follow-up turns completed

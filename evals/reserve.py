@@ -1,4 +1,4 @@
-"""Reserve whole broker groups using filenames and byte hashes, without parsing PDFs."""
+"""Optional evaluation split; not required or enforced by the application."""
 
 import hashlib
 import json
@@ -37,12 +37,13 @@ for row in rows:
     row["split"] = "acceptance" if row["file"] in held else "development"
 result = dict(
     method="Filename-only whole-broker holdout; SHA256 exact duplicates co-located. Seed find-rpt-iteration-01. No report text read.",
-    isolation="Application excludes acceptance; no OS-level isolation from developer. Cross-broker near-duplicates remain unverified.",
+    isolation="Evaluation metadata only; ordinary application access is unrestricted. The evaluation runner limits its inventory to the frozen selection. Cross-broker near-duplicates remain unverified.",
     reports=rows,
 )
 out = ROOT / "local/split.json"
 if out.exists():
     raise SystemExit("Split already exists; refusing to replace it.")
+out.parent.mkdir(parents=True, exist_ok=True)
 out.write_text(json.dumps(result, indent=2) + "\n")
 print(
     json.dumps(

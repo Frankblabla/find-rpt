@@ -15,10 +15,12 @@ def evaluation(corpus, tmp_path, monkeypatch):
         rid = corpus(
             f"20260511_{broker}_a.pdf",
             "\n".join(LINES.values()) + f"\nSynthetic selected fixture {index}",
-            split="acceptance",
         )
         identities.append({"report_id": rid, "ticker": "ABC LN"})
-        corpus(f"20260511_{broker}_z.pdf", f"Bloomberg: XYZ LN\nUNSELECTED {index}", split="acceptance")
+        corpus(f"20260511_{broker}_z.pdf", f"Bloomberg: XYZ LN\nUNSELECTED {index}")
+    heldout.save(tmp_path / "split.json", {
+        "reports": [dict(row, split="acceptance") for row in reports.inventory()],
+    })
     base = tmp_path / "evaluation"
     base.mkdir()
     product = tmp_path / "product.txt"
@@ -63,10 +65,12 @@ def test_selected_only_api_run_preserves_original_split_and_prevents_repeats(eva
     calls = fake_process(monkeypatch, [payload(e.model_dump())])
     split = heldout.SPLIT.read_bytes()
     previous_paths = reports.LOCAL, reports.CORPUS, harness.RUNS
+    original_inventory = reports.inventory
     result = heldout.invoke(rid)
     assert result["status"] == ("failed" if fails else "complete")
     assert result["model_invocations"] == 1 and len(calls) == 1 and opened
     assert (reports.LOCAL, reports.CORPUS, harness.RUNS) == previous_paths
+    assert reports.inventory is original_inventory and len(reports.inventory()) == 8
     assert heldout.SPLIT.read_bytes() == split
     directory = heldout.EVALUATION / "cases" / rid
     view = heldout.load(directory / "split.json")["reports"]

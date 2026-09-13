@@ -1,7 +1,7 @@
 """Isolated synthetic email evaluation using the real product API and model.
 
 Prepare freezes ordinary report-like source data. Invoke is explicit, one-shot,
-and uses a separate corpus/manifest/run directory in this process only.
+and uses a separate corpus/run directory in this process only.
 """
 
 import argparse
@@ -60,10 +60,6 @@ def prepare():
         page.get_pixmap(matrix=pymupdf.Matrix(1.5, 1.5)).save(DIRECTORY / "source.png")
     (DIRECTORY / "source.txt").write_text(SOURCE)
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
-    save(DIRECTORY / "split.json", {"synthetic": True, "reports": [{
-        "file": path.name, "date": "20260912", "broker": "Synthetic Research",
-        "sha256": digest, "split": "development",
-    }]})
     save(DIRECTORY / "fixture.json", {
         "synthetic": True, "report_id": digest[:16], "sha256": digest,
         "ticker": "NBI LN", "pdf": str(path),

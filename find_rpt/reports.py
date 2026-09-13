@@ -1,7 +1,6 @@
 """Filename filtering, conservative subject lookup, and original PDF coordinates."""
 
 import hashlib
-import json
 import re
 from datetime import datetime
 from functools import lru_cache
@@ -15,25 +14,32 @@ LOCAL = ROOT / "local"
 
 
 def inventory():
-    manifest = LOCAL / "split.json"
-    if not manifest.exists():
-        raise ValueError(
-            "Reserve acceptance reports first: uv run python evals/reserve.py"
-        )
-    return [
-        dict(row, id=row["sha256"][:16])
-        for row in json.loads(manifest.read_text())["reports"]
-    ]
+    """Discover source files directly; no PDF text parsing or saved index needed."""
+    rows = []
+    if not CORPUS.exists():
+        return rows
+    for path in sorted(CORPUS.iterdir()):
+        match = re.fullmatch(r"(\d{8})_([^_]+)_(.+)\.pdf", path.name, re.I)
+        if not path.is_file() or not match or not match[2].strip():
+            continue
+        try:
+            datetime.strptime(match[1], "%Y%m%d")
+        except ValueError:
+            continue
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        rows.append(dict(file=path.name, date=match[1], broker=match[2],
+                         sha256=digest, id=digest[:16]))
+    return rows
 
 
 def report(report_id):
     row = next((r for r in inventory() if r["id"] == report_id), None)
     if row is None:
-        raise ValueError("Unknown report.")
+        raise ValueError("Report unavailable: the PDF was removed, changed, or its ID is unknown.")
     path = CORPUS / row["file"]
     if hashlib.sha256(path.read_bytes()).hexdigest() != row["sha256"]:
         raise ValueError(
-            "Original PDF changed; the saved split and evidence must be reviewed."
+            "Original PDF changed; start a new case for the updated source."
         )
     return row, path
 
@@ -188,7 +194,7 @@ def lookup(ticker, date, broker, report_id=None):
         else "ambiguous",
         candidates=candidates,
         review_candidates=review_candidates,
-        note=f"All {len(rows)} manifest reports are available; original split labels are retained. "
+        note=f"Found {len(rows)} reports in corpus/. "
         "Exact cover identifiers are checked; other date/broker candidates require explicit user review. "
         "Dates use filenames; the brief separately reports the printed release date. "
         "Only GY/GR is normalized. Other layouts may require manual inspection.",
@@ -208,7 +214,7 @@ def select_report(report_id, ticker, confirm_selection=False):
     return dict(
         method="cover_identifier" if match else "user_confirmed",
         cover_sources=[line["id"] for line in match["evidence"]] if match else [],
-        report_sha256=row["sha256"], original_split=row["split"],
+        report_sha256=row["sha256"],
     )
 
 

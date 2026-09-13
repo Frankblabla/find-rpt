@@ -29,7 +29,7 @@ function ui() {
     return elements.get(id);
   }
   let fetcher = async path => path === '/api/catalog' ? {
-    models:['opus'], efforts:['high'], default_model:'opus', default_effort:'high', brokers:['Test'], total:101, development:88, acceptance:13,
+    models:['opus'], efforts:['high'], default_model:'opus', default_effort:'high', brokers:['Test'], total:101,
   } : [];
   const context = vm.createContext({
     document: { getElementById:element, addEventListener(){}, querySelectorAll(){return [];} },
@@ -39,7 +39,7 @@ function ui() {
   vm.runInContext(source, context);
   return {element, context, setFetch: fn => {fetcher = fn;}, search: () => element('search').onsubmit({preventDefault(){}})};
 }
-const candidate = (ticker, id='a') => ({status:'no_match', candidates:[], review_candidates:[{id, ticker, file:'Example.pdf', split:'acceptance'}]});
+const candidate = (ticker, id='a') => ({status:'no_match', candidates:[], review_candidates:[{id, ticker, file:'Example.pdf'}]});
 
 test('lookup clears old confirmations and discards stale lookup responses', async () => {
   const u=ui(); await tick();

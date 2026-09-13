@@ -61,12 +61,6 @@
       "source": "local/iteration-07-recovery/development-provenance.json",
       "sha256": "05346de19fca14e8203bcbdf5341a626ba92100730cf3ec968d3244021319d93",
       "transformation": "None; exact copy of a previously saved, selected artifact."
-    },
-    {
-      "file": "corpus-manifest.json",
-      "source": "local/split.json",
-      "sha256": "4aee2a3112270c503d93d25cd83c669c71461a6b3175cf82a74f60408315427f",
-      "transformation": "None; metadata-only original split. Historical isolation wording is not the current application access policy."
     }
   ]
 }

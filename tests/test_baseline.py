@@ -36,17 +36,50 @@ def test_labelled_subject_alias_no_match_and_ambiguity(corpus):
     )
 
 
-def test_original_acceptance_label_retained_with_normal_source_access(corpus):
-    held = corpus("20260511_Test_a.pdf", "Bloomberg: BP/ LN", split="acceptance")
-    before = (reports.LOCAL / "split.json").read_bytes()
+def test_pdf_placement_enables_lookup_and_source_access_without_setup(corpus):
+    held = corpus("20260511_Test_a.pdf", "Bloomberg: BP/ LN")
+    assert not (reports.LOCAL / "split.json").exists()
     match = reports.lookup("BP/ LN", "2026-05-11", "Test")["candidates"][0]
-    assert match["id"] == held and match["split"] == "acceptance"
+    assert match["id"] == held
     client = web.app.test_client()
     catalog = client.get("/api/catalog").json
-    assert (catalog["total"], catalog["development"], catalog["acceptance"]) == (1, 0, 1)
+    assert catalog["total"] == 1 and catalog["brokers"] == ["Test"]
     assert client.get(f"/pdf/{held}").data.startswith(b"%PDF")
     assert client.get(f"/source/{held}?refs=p1l1").status_code == 200
-    assert (reports.LOCAL / "split.json").read_bytes() == before
+    assert not (reports.LOCAL / "split.json").exists()
+
+
+def test_discovery_ignores_legacy_evaluation_metadata(corpus):
+    rid = corpus("20260511_Test_a.pdf", "Bloomberg: ABC LN")
+    old_split = reports.LOCAL / "split.json"
+    old_split.write_text("Unrelated historical evaluation data")
+    assert reports.lookup("ABC LN", "2026-05-11", "Test")["candidates"][0]["id"] == rid
+    assert old_split.read_text() == "Unrelated historical evaluation data"
+
+
+def test_file_addition_rename_and_removal_need_no_reindex(corpus):
+    rid = corpus("20260511_Test_a.pdf", "Bloomberg: ABC LN")
+    other = corpus("20260512_Other_b.pdf", "Bloomberg: XYZ LN")
+    assert {r["id"] for r in reports.inventory()} == {rid, other}
+    _, path = reports.report(rid)
+    renamed = path.with_name("20260513_Renamed_a.pdf")
+    path.rename(renamed)
+    assert reports.lookup("ABC LN", "2026-05-13", "Renamed")["candidates"][0]["id"] == rid
+    assert reports.lookup("ABC LN", "2026-05-11", "Test")["status"] == "no_match"
+    renamed.unlink()
+    assert [r["id"] for r in reports.inventory()] == [other]
+    with pytest.raises(ValueError, match="unavailable"):
+        reports.extract(rid)
+
+
+def test_empty_corpus_and_unrecognized_files_are_safe(corpus):
+    for name in ["README.md", "notes.pdf", "20260230_Test_a.pdf", "20260511__a.pdf"]:
+        (reports.CORPUS / name).write_text("Not a report")
+    assert web.app.test_client().get("/api/catalog").json["total"] == 0
+    for path in reports.CORPUS.iterdir():
+        path.unlink()
+    reports.CORPUS.rmdir()
+    assert reports.lookup("ABC LN", "2026-05-11", "Test")["status"] == "no_match"
 
 
 def test_slash_ticker_and_exact_boundaries(corpus):
@@ -75,10 +108,13 @@ def test_original_coordinates_and_bad_reference_rejection(corpus):
 
 def test_changed_original_fails_closed(corpus):
     rid = corpus("20260511_Test_a.pdf", "Bloomberg: ABC LN")
+    reports.extract(rid)
     _, path = reports.report(rid)
     path.write_bytes(path.read_bytes() + b"changed")
     with pytest.raises(ValueError, match="changed"):
         reports.extract(rid)
+    replacement = reports.inventory()[0]["id"]
+    assert replacement != rid and reports.extract(replacement)["pages"]
 
 
 def test_missing_zero_negative_and_consensus_arithmetic():

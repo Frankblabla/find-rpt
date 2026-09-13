@@ -75,8 +75,6 @@ def catalog():
         brokers=sorted({r["broker"] for r in rows}),
         dates=sorted({r["date"] for r in rows}),
         total=len(rows),
-        development=sum(r["split"] == "development" for r in rows),
-        acceptance=sum(r["split"] == "acceptance" for r in rows),
         models=MODELS,
         efforts=EFFORTS,
         default_model=selection()[0],
